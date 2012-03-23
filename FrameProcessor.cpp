@@ -1,6 +1,6 @@
 #include "FrameProcessor.h"
 
-FrameProcessor::FrameProcessor() : firstTime(true), frameNumber(0), duration(0)
+FrameProcessor::FrameProcessor() : firstTime(true), frameNumber(0), duration(0), tictoc("")
 {
   std::cout << "FrameProcessor()" << std::endl;
 
@@ -51,12 +51,24 @@ FrameProcessor::FrameProcessor() : firstTime(true), frameNumber(0), duration(0)
 
   if(enableDPEigenbackgroundBGS)
     eigenBackground = new DPEigenbackgroundBGS;
+
+  if(enableT2FGMM_UM)
+    type2FuzzyGMM_UM = new T2FGMM_UM;
+
+  if(enableT2FGMM_UV)
+    type2FuzzyGMM_UV = new T2FGMM_UV;
 }
 
 FrameProcessor::~FrameProcessor()
 {
   std::cout << "~FrameProcessor()" << std::endl;
   
+  if(enableT2FGMM_UV)
+    delete type2FuzzyGMM_UV;
+
+  if(enableT2FGMM_UM)
+    delete type2FuzzyGMM_UM;
+
   if(enableDPEigenbackgroundBGS)
     delete eigenBackground;
 
@@ -108,17 +120,25 @@ void FrameProcessor::process(const cv::Mat &img_input)
   cv::Mat img_prep;
   if(enablePreProcessor)
   {
-    //tic("PreProcessor");
+    if(tictoc == "PreProcessor")
+      tic("PreProcessor");
+
     preProcessor->process(img_input, img_prep);
-    //toc();
+
+    if(tictoc == "PreProcessor")
+      toc();
   }
   
   cv::Mat img_framediff;
   if(enableFrameDifferenceBGS)
   {
-    //tic("FrameDifferenceBGS");
+    if(tictoc == "FrameDifferenceBGS")
+      tic("FrameDifferenceBGS");
+
     frameDifference->process(img_prep,img_framediff);
-    //toc();
+
+    if(tictoc == "FrameDifferenceBGS")
+      toc();
   }
   
   cv::Mat img_staticfdiff;
@@ -128,107 +148,182 @@ void FrameProcessor::process(const cv::Mat &img_input)
       staticFrameDifference->setBackgroundRef(img_prep);
     else
     {
-      //tic("StaticFrameDifferenceBGS");
+      if(tictoc == "StaticFrameDifferenceBGS")
+        tic("StaticFrameDifferenceBGS");
+
       staticFrameDifference->process(img_prep,img_staticfdiff);
-      //toc();
+
+      if(tictoc == "StaticFrameDifferenceBGS")
+        toc();
     }
   }
   
   cv::Mat img_wmovmean;
   if(enableWeightedMovingMeanBGS)
   {
-    //tic("WeightedMovingMeanBGS");
+    if(tictoc == "WeightedMovingMeanBGS")
+      tic("WeightedMovingMeanBGS");
+
     weightedMovingMean->process(img_prep,img_wmovmean);
-    //toc();
+
+    if(tictoc == "WeightedMovingMeanBGS")
+      toc();
   }
   
   cv::Mat img_movvar;
   if(enableWeightedMovingVarianceBGS)
   {
-    //tic("WeightedMovingVarianceBGS");
-    //weightedMovingVariance->setEnableThreshold(false);
+    if(tictoc == "WeightedMovingVarianceBGS")
+      tic("WeightedMovingVarianceBGS");
+
     weightedMovingVariance->process(img_prep,img_movvar);
-    //toc();
+
+    if(tictoc == "WeightedMovingVarianceBGS")
+      toc();
   }
   
   cv::Mat img_mog1;
   if(enableMixtureOfGaussianV1BGS)
   {
-    //tic("MixtureOfGaussianV1BGS");
+    if(tictoc == "MixtureOfGaussianV1BGS")
+      tic("MixtureOfGaussianV1BGS");
+
     mixtureOfGaussianV1BGS->process(img_prep,img_mog1);
-    //toc();
+
+    if(tictoc == "MixtureOfGaussianV1BGS")
+      toc();
   }
   
   cv::Mat img_mog2;
   if(enableMixtureOfGaussianV2BGS)
   {
-    //tic("MixtureOfGaussianV2BGS");
+    if(tictoc == "MixtureOfGaussianV2BGS")
+      tic("MixtureOfGaussianV2BGS");
+
     mixtureOfGaussianV2BGS->process(img_prep,img_mog2);
-    //toc();
+
+    if(tictoc == "MixtureOfGaussianV2BGS")
+      toc();
   }
   
   cv::Mat img_bkgl_fgmask;
   if(enableAdaptiveBackgroundLearning)
   {
-    //tic("AdaptiveBackgroundLearning");
+    if(tictoc == "AdaptiveBackgroundLearning")
+      tic("AdaptiveBackgroundLearning");
+
     adaptiveBackgroundLearning->process(img_prep,img_bkgl_fgmask);
-    //toc();
+
+    if(tictoc == "AdaptiveBackgroundLearning")
+      toc();
   }
 
   cv::Mat img_adpmed;
   if(enableDPAdaptiveMedianBGS)
   {
-    //tic("DPAdaptiveMedianBGS");
+    if(tictoc == "DPAdaptiveMedianBGS")
+      tic("DPAdaptiveMedianBGS");
+
     adaptiveMedian->process(img_prep,img_adpmed);
-    //toc();
+
+    if(tictoc == "DPAdaptiveMedianBGS")
+      toc();
   }
   
   cv::Mat img_grigmm;
   if(enableDPGrimsonGMMBGS)
   {
-    //tic("DPGrimsonGMMBGS");
+    if(tictoc == "DPGrimsonGMMBGS")
+      tic("DPGrimsonGMMBGS");
+
     grimsonGMM->process(img_prep,img_grigmm);
-    //toc();
+
+    if(tictoc == "DPGrimsonGMMBGS")
+      toc();
   }
   
   cv::Mat img_zivgmm;
   if(enableDPZivkovicAGMMBGS)
   {
-    //tic("DPZivkovicAGMMBGS");
+    if(tictoc == "DPZivkovicAGMMBGS")
+      tic("DPZivkovicAGMMBGS");
+
     zivkovicAGMM->process(img_prep,img_zivgmm);
-    //toc();
+
+    if(tictoc == "DPZivkovicAGMMBGS")
+      toc();
   }
   
   cv::Mat img_tmpmean;
   if(enableDPMeanBGS)
   {
-    //tic("DPMeanBGS");
+    if(tictoc == "DPMeanBGS")
+      tic("DPMeanBGS");
+
     temporalMean->process(img_prep,img_tmpmean);
-    //toc();
+
+    if(tictoc == "DPMeanBGS")
+      toc();
   }
   
   cv::Mat img_wrenga;
   if(enableDPWrenGABGS)
   {
-    //tic("DPWrenGABGS");
+    if(tictoc == "DPWrenGABGS")
+      tic("DPWrenGABGS");
+
     wrenGA->process(img_prep,img_wrenga);
-    //toc();
+
+    if(tictoc == "DPWrenGABGS")
+      toc();
   }
   
   cv::Mat img_pramed;
   if(enableDPPratiMediodBGS)
   {
-    //tic("DPPratiMediodBGS");
+    if(tictoc == "DPPratiMediodBGS")
+      tic("DPPratiMediodBGS");
+
     pratiMediod->process(img_prep,img_pramed);
-    //toc();
+
+    if(tictoc == "DPPratiMediodBGS")
+      toc();
   }
   
   cv::Mat img_eigbkg;
   if(enableDPEigenbackgroundBGS)
   {
-    //tic("DPEigenbackgroundBGS");
+    if(tictoc == "DPEigenbackgroundBGS")
+      tic("DPEigenbackgroundBGS");
+
     eigenBackground->process(img_input,img_eigbkg);
-    //toc();
+
+    if(tictoc == "DPEigenbackgroundBGS")
+      toc();
+  }
+
+  cv::Mat img_t2fgmm_um;
+  if(enableT2FGMM_UM)
+  {
+    if(tictoc == "T2FGMM_UM")
+      tic("T2FGMM_UM");
+
+    type2FuzzyGMM_UM->process(img_prep,img_t2fgmm_um);
+
+    if(tictoc == "T2FGMM_UM")
+      toc();
+  }
+
+  cv::Mat img_t2fgmm_uv;
+  if(enableT2FGMM_UV)
+  {
+    if(tictoc == "T2FGMM_UV")
+      tic("T2FGMM_UV");
+
+    type2FuzzyGMM_UV->process(img_prep,img_t2fgmm_uv);
+
+    if(tictoc == "T2FGMM_UV")
+      toc();
   }
 
   firstTime = false;
@@ -244,12 +339,14 @@ void FrameProcessor::tic(std::string value)
 void FrameProcessor::toc()
 {
   duration = (static_cast<double>(cv::getTickCount()) - duration)/cv::getTickFrequency();
-  std::cout << processname << "\ttime(sec):" << duration << "" << std::endl;
+  std::cout << processname << "\ttime(sec):" << std::fixed << std::setprecision(6) << duration << std::endl;
 }
 
 void FrameProcessor::saveConfig()
 {
   CvFileStorage* fs = cvOpenFileStorage("./config/FrameProcessor.xml", 0, CV_STORAGE_WRITE);
+
+  cvWriteString(fs, "tictoc", tictoc.c_str());
 
   cvWriteInt(fs, "enablePreProcessor", enablePreProcessor);
 
@@ -269,6 +366,9 @@ void FrameProcessor::saveConfig()
   cvWriteInt(fs, "enableDPPratiMediodBGS", enableDPPratiMediodBGS);
   cvWriteInt(fs, "enableDPEigenbackgroundBGS", enableDPEigenbackgroundBGS);
 
+  cvWriteInt(fs, "enableT2FGMM_UM", enableT2FGMM_UM);
+  cvWriteInt(fs, "enableT2FGMM_UV", enableT2FGMM_UV);
+
   cvReleaseFileStorage(&fs);
 }
 
@@ -276,6 +376,8 @@ void FrameProcessor::loadConfig()
 {
   CvFileStorage* fs = cvOpenFileStorage("./config/FrameProcessor.xml", 0, CV_STORAGE_READ);
   
+  tictoc = cvReadStringByName(fs, 0, "tictoc", "");
+
   enablePreProcessor = cvReadIntByName(fs, 0, "enablePreProcessor", true);
   
   enableFrameDifferenceBGS = cvReadIntByName(fs, 0, "enableFrameDifferenceBGS", true);
@@ -293,6 +395,9 @@ void FrameProcessor::loadConfig()
   enableDPWrenGABGS = cvReadIntByName(fs, 0, "enableDPWrenGABGS", true);
   enableDPPratiMediodBGS = cvReadIntByName(fs, 0, "enableDPPratiMediodBGS", true);
   enableDPEigenbackgroundBGS = cvReadIntByName(fs, 0, "enableDPEigenbackgroundBGS", true);
+
+  enableT2FGMM_UM = cvReadIntByName(fs, 0, "enableT2FGMM_UM", true);
+  enableT2FGMM_UV = cvReadIntByName(fs, 0, "enableT2FGMM_UV", true);
 
   cvReleaseFileStorage(&fs);
 }

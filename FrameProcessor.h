@@ -19,6 +19,9 @@
 #include "DPPratiMediodBGS.h"
 #include "DPEigenbackgroundBGS.h"
 
+#include "T2FGMM_UM.h"
+#include "T2FGMM_UV.h"
+
 class FrameProcessor : public IFrameProcessor
 {
 private:
@@ -26,9 +29,7 @@ private:
   long frameNumber;
   std::string processname;
   double duration;
-  
-  void saveConfig();
-  void loadConfig();
+  std::string tictoc;
 
   PreProcessor* preProcessor;
   bool enablePreProcessor;
@@ -75,6 +76,12 @@ private:
   DPEigenbackgroundBGS* eigenBackground;
   bool enableDPEigenbackgroundBGS;
 
+  T2FGMM_UM* type2FuzzyGMM_UM;
+  bool enableT2FGMM_UM;
+
+  T2FGMM_UV* type2FuzzyGMM_UV;
+  bool enableT2FGMM_UV;
+
 public:
   FrameProcessor();
   ~FrameProcessor();
@@ -82,5 +89,9 @@ public:
   void process(const cv::Mat &img_input);
   void tic(std::string value);
   void toc();
+
+private:
+  void saveConfig();
+  void loadConfig();
 };
 
