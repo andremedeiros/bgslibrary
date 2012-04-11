@@ -4,7 +4,9 @@
 #include <cv.h>
 #include <highgui.h>
 
-class WeightedMovingVarianceBGS
+#include "IBGS.h"
+
+class WeightedMovingVarianceBGS : public IBGS
 {
 private:
   bool firstTime;

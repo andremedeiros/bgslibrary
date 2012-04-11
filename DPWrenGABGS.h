@@ -4,11 +4,12 @@
 #include <cv.h>
 #include <highgui.h>
 
+#include "IBGS.h"
 #include "WrenGA.h"
 
 using namespace Algorithms::BackgroundSubtraction;
 
-class DPWrenGABGS
+class DPWrenGABGS : public IBGS
 {
 private:
   bool firstTime;

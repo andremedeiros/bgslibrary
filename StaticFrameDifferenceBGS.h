@@ -4,7 +4,9 @@
 #include <cv.h>
 #include <highgui.h>
 
-class StaticFrameDifferenceBGS
+#include "IBGS.h"
+
+class StaticFrameDifferenceBGS : public IBGS
 {
 private:
   bool firstTime;
@@ -18,7 +20,6 @@ public:
   StaticFrameDifferenceBGS();
   ~StaticFrameDifferenceBGS();
 
-  void setBackgroundRef(const cv::Mat &img_bkg);
   void process(const cv::Mat &img_input, cv::Mat &img_output);
 
 private:

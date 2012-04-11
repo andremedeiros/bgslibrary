@@ -19,6 +19,7 @@ private:
   double freq;
   double fps;
   long frameNumber;
+  long stopAt;
   bool useCamera;
   int cameraIndex;
   bool useVideo;

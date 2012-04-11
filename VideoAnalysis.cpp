@@ -1,6 +1,6 @@
 #include "VideoAnalysis.h"
 
-VideoAnalysis::VideoAnalysis() : use_file(false), use_camera(false), cameraIndex(0)
+VideoAnalysis::VideoAnalysis() : use_file(false), use_camera(false), cameraIndex(0), use_comp(false), frameToStop(0)
 {
   std::cout << "VideoAnalysis()" << std::endl;
 }
@@ -20,6 +20,9 @@ bool VideoAnalysis::setup(int argc, const char **argv)
   "{fn|filename||Specify video file}"
   "{uc|use_cam|false|Use camera}"
   "{ca|camera|0|Specify camera index}"
+  "{co|use_comp|false|Use mask comparator}"
+  "{st|stopAt|0|Frame number to stop}"
+  "{im|imgref||Specify image file}"
   ;
   cv::CommandLineParser cmd(argc, argv, keys);
   
@@ -32,8 +35,6 @@ bool VideoAnalysis::setup(int argc, const char **argv)
   }
 
   use_file = cmd.get<bool>("use_file");
-  use_camera = cmd.get<bool>("use_cam");
-
   if(use_file)
   {
     filename = cmd.get<std::string>("filename");
@@ -47,10 +48,27 @@ bool VideoAnalysis::setup(int argc, const char **argv)
     flag = true;
   }
 
+  use_camera = cmd.get<bool>("use_cam");
   if(use_camera)
   {
     cameraIndex = cmd.get<int>("camera");
     flag = true;
+  }
+
+  if(flag == true)
+  {
+    use_comp = cmd.get<bool>("use_comp");
+    if(use_comp)
+    {
+      frameToStop = cmd.get<int>("stopAt");
+      imgref = cmd.get<std::string>("imgref");
+
+      if(imgref.empty())
+      {
+        std::cout << "Specify image reference"<< std::endl;
+        return false;
+      }
+    }
   }
 
   return flag;
@@ -62,6 +80,8 @@ void VideoAnalysis::start()
   {
     videoCapture = new VideoCapture;
     frameProcessor = new FrameProcessor;
+    frameProcessor->frameToStop = frameToStop;
+    frameProcessor->imgref = imgref;
 
     videoCapture->setFrameProcessor(frameProcessor);
 

@@ -15,6 +15,9 @@ private:
   std::string filename;
   bool use_camera;
   int cameraIndex;
+  bool use_comp;
+  long frameToStop;
+  std::string imgref;
 
 public:
   VideoAnalysis();

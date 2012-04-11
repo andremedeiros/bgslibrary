@@ -4,11 +4,12 @@
 #include <cv.h>
 #include <highgui.h>
 
+#include "IBGS.h"
 #include "ZivkovicAGMM.h"
 
 using namespace Algorithms::BackgroundSubtraction;
 
-class DPZivkovicAGMMBGS
+class DPZivkovicAGMMBGS : public IBGS
 {
 private:
   bool firstTime;

@@ -4,11 +4,12 @@
 #include <cv.h>
 #include <highgui.h>
 
+#include "IBGS.h"
 #include "AdaptiveMedianBGS.h"
 
 using namespace Algorithms::BackgroundSubtraction;
 
-class DPAdaptiveMedianBGS
+class DPAdaptiveMedianBGS : public IBGS
 {
 private:
   bool firstTime;

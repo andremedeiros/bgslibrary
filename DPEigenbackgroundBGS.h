@@ -4,11 +4,12 @@
 #include <cv.h>
 #include <highgui.h>
 
+#include "IBGS.h"
 #include "Eigenbackground.h"
 
 using namespace Algorithms::BackgroundSubtraction;
 
-class DPEigenbackgroundBGS
+class DPEigenbackgroundBGS : public IBGS
 {
 private:
   bool firstTime;

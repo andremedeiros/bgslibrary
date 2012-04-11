@@ -4,11 +4,12 @@
 #include <cv.h>
 #include <highgui.h>
 
+#include "IBGS.h"
 #include "PratiMediodBGS.h"
 
 using namespace Algorithms::BackgroundSubtraction;
 
-class DPPratiMediodBGS
+class DPPratiMediodBGS : public IBGS
 {
 private:
   bool firstTime;

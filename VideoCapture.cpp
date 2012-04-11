@@ -49,7 +49,7 @@ void VideoCapture_on_mouse(int evt, int x, int y, int flag, void* param)
 }
 }
 
-VideoCapture::VideoCapture() : key(0), start_time(0), delta_time(0), freq(0), fps(0), frameNumber(0), 
+VideoCapture::VideoCapture() : key(0), start_time(0), delta_time(0), freq(0), fps(0), frameNumber(0), stopAt(0),
   useCamera(false), useVideo(false), input_resize_percent(100), showOutput(true), enableFlip(false)
 {
   std::cout << "VideoCapture()" << std::endl;
@@ -144,7 +144,7 @@ void VideoCapture::start()
         {
           cv::imshow("Input", img_input);
 
-          std::cout << "Set ROI" << std::endl;
+          std::cout << "Set ROI (press ESC to skip)" << std::endl;
           VC_ROI::img_input1 = new IplImage(img_input);
           cvSetMouseCallback("Input", VC_ROI::VideoCapture_on_mouse, NULL);
           key = cvWaitKey(0);
@@ -162,7 +162,6 @@ void VideoCapture::start()
 
         if(VC_ROI::roi_defined)
         {
-          //ROI definido (119,91,317,223)
           std::cout << "ROI defined (" << VC_ROI::roi_x0 << "," << VC_ROI::roi_y0 << "," << VC_ROI::roi_x1 << "," << VC_ROI::roi_y1 << ")" << std::endl;
           break;
         }
@@ -204,6 +203,9 @@ void VideoCapture::start()
     if(key == KEY_ESC)
       break;
 
+    if(stopAt > 0 && stopAt == frameNumber)
+      key = cvWaitKey(0);
+
     firstTime = false;
   }while(1);
 
@@ -214,6 +216,7 @@ void VideoCapture::saveConfig()
 {
   CvFileStorage* fs = cvOpenFileStorage("./config/VideoCapture.xml", 0, CV_STORAGE_WRITE);
 
+  cvWriteInt(fs, "stopAt", stopAt);
   cvWriteInt(fs, "input_resize_percent", input_resize_percent);
   cvWriteInt(fs, "enableFlip", enableFlip);
   cvWriteInt(fs, "use_roi", VC_ROI::use_roi);
@@ -231,6 +234,7 @@ void VideoCapture::loadConfig()
 {
   CvFileStorage* fs = cvOpenFileStorage("./config/VideoCapture.xml", 0, CV_STORAGE_READ);
 
+  stopAt = cvReadIntByName(fs, 0, "stopAt", 0);
   input_resize_percent = cvReadIntByName(fs, 0, "input_resize_percent", 100);
   enableFlip = cvReadIntByName(fs, 0, "enableFlip", false);
   VC_ROI::use_roi = cvReadIntByName(fs, 0, "use_roi", true);

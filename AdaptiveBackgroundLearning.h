@@ -4,7 +4,9 @@
 #include <cv.h>
 #include <highgui.h>
 
-class AdaptiveBackgroundLearning
+#include "IBGS.h"
+
+class AdaptiveBackgroundLearning : public IBGS
 {
 private:
   bool firstTime;

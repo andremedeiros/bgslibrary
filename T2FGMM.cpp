@@ -314,8 +314,7 @@ void T2FGMM::SubtractPixel(long posPixel, const RgbPixel& pixel, unsigned char& 
 //					(the memory should already be reserved) 
 //					values: 255-foreground, 125-shadow, 0-background
 ///////////////////////////////////////////////////////////////////////////////
-void T2FGMM::Subtract(int frame_num, const RgbImage& data,  
-  BwImage& low_threshold_mask, BwImage& high_threshold_mask)
+void T2FGMM::Subtract(int frame_num, const RgbImage& data, BwImage& low_threshold_mask, BwImage& high_threshold_mask)
 {
   unsigned char low_threshold, high_threshold;
   long posPixel;

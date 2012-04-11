@@ -4,7 +4,9 @@
 #include <cv.h>
 #include <highgui.h>
 
-class FrameDifferenceBGS
+#include "IBGS.h"
+
+class FrameDifferenceBGS : public IBGS
 {
 private:
   bool firstTime;

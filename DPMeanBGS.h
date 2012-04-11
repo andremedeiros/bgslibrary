@@ -4,11 +4,12 @@
 #include <cv.h>
 #include <highgui.h>
 
+#include "IBGS.h"
 #include "MeanBGS.h"
 
 using namespace Algorithms::BackgroundSubtraction;
 
-class DPMeanBGS
+class DPMeanBGS : public IBGS
 {
 private:
   bool firstTime;

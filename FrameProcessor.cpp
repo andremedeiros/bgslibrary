@@ -1,6 +1,6 @@
 #include "FrameProcessor.h"
 
-FrameProcessor::FrameProcessor() : firstTime(true), frameNumber(0), duration(0), tictoc("")
+FrameProcessor::FrameProcessor() : firstTime(true), frameNumber(0), duration(0), tictoc(""), frameToStop(0)
 {
   std::cout << "FrameProcessor()" << std::endl;
 
@@ -57,12 +57,18 @@ FrameProcessor::FrameProcessor() : firstTime(true), frameNumber(0), duration(0),
 
   if(enableT2FGMM_UV)
     type2FuzzyGMM_UV = new T2FGMM_UV;
+
+  if(enableForegroundMaskAnalysis)
+    foregroundMaskAnalysis = new ForegroundMaskAnalysis;
 }
 
 FrameProcessor::~FrameProcessor()
 {
   std::cout << "~FrameProcessor()" << std::endl;
   
+  if(enableForegroundMaskAnalysis)
+    delete foregroundMaskAnalysis;
+
   if(enableT2FGMM_UV)
     delete type2FuzzyGMM_UV;
 
@@ -115,219 +121,96 @@ FrameProcessor::~FrameProcessor()
     delete preProcessor;
 }
 
+void FrameProcessor::process(std::string name, IBGS *bgs, const cv::Mat &img_input, cv::Mat &img_bgs)
+{
+  if(tictoc == name)
+    tic(name);
+
+  bgs->process(img_input, img_bgs);
+
+  if(tictoc == name)
+    toc();
+}
+
 void FrameProcessor::process(const cv::Mat &img_input)
 {
-  cv::Mat img_prep;
+  frameNumber++;
+
   if(enablePreProcessor)
-  {
-    if(tictoc == "PreProcessor")
-      tic("PreProcessor");
-
     preProcessor->process(img_input, img_prep);
-
-    if(tictoc == "PreProcessor")
-      toc();
-  }
   
-  cv::Mat img_framediff;
   if(enableFrameDifferenceBGS)
-  {
-    if(tictoc == "FrameDifferenceBGS")
-      tic("FrameDifferenceBGS");
-
-    frameDifference->process(img_prep,img_framediff);
-
-    if(tictoc == "FrameDifferenceBGS")
-      toc();
-  }
+    process("FrameDifferenceBGS", frameDifference, img_prep, img_framediff);
   
-  cv::Mat img_staticfdiff;
   if(enableStaticFrameDifferenceBGS)
-  {
-    if(firstTime)
-      staticFrameDifference->setBackgroundRef(img_prep);
-    else
-    {
-      if(tictoc == "StaticFrameDifferenceBGS")
-        tic("StaticFrameDifferenceBGS");
-
-      staticFrameDifference->process(img_prep,img_staticfdiff);
-
-      if(tictoc == "StaticFrameDifferenceBGS")
-        toc();
-    }
-  }
+    process("StaticFrameDifferenceBGS", staticFrameDifference, img_prep, img_staticfdiff);
   
-  cv::Mat img_wmovmean;
   if(enableWeightedMovingMeanBGS)
-  {
-    if(tictoc == "WeightedMovingMeanBGS")
-      tic("WeightedMovingMeanBGS");
-
-    weightedMovingMean->process(img_prep,img_wmovmean);
-
-    if(tictoc == "WeightedMovingMeanBGS")
-      toc();
-  }
+    process("WeightedMovingMeanBGS", weightedMovingMean, img_prep, img_wmovmean);
   
-  cv::Mat img_movvar;
   if(enableWeightedMovingVarianceBGS)
-  {
-    if(tictoc == "WeightedMovingVarianceBGS")
-      tic("WeightedMovingVarianceBGS");
-
-    weightedMovingVariance->process(img_prep,img_movvar);
-
-    if(tictoc == "WeightedMovingVarianceBGS")
-      toc();
-  }
+    process("WeightedMovingVarianceBGS", weightedMovingVariance, img_prep, img_movvar);
   
-  cv::Mat img_mog1;
   if(enableMixtureOfGaussianV1BGS)
-  {
-    if(tictoc == "MixtureOfGaussianV1BGS")
-      tic("MixtureOfGaussianV1BGS");
-
-    mixtureOfGaussianV1BGS->process(img_prep,img_mog1);
-
-    if(tictoc == "MixtureOfGaussianV1BGS")
-      toc();
-  }
+    process("MixtureOfGaussianV1BGS", mixtureOfGaussianV1BGS, img_prep, img_mog1);
   
-  cv::Mat img_mog2;
   if(enableMixtureOfGaussianV2BGS)
-  {
-    if(tictoc == "MixtureOfGaussianV2BGS")
-      tic("MixtureOfGaussianV2BGS");
-
-    mixtureOfGaussianV2BGS->process(img_prep,img_mog2);
-
-    if(tictoc == "MixtureOfGaussianV2BGS")
-      toc();
-  }
+    process("MixtureOfGaussianV2BGS", mixtureOfGaussianV2BGS, img_prep, img_mog2);
   
-  cv::Mat img_bkgl_fgmask;
   if(enableAdaptiveBackgroundLearning)
-  {
-    if(tictoc == "AdaptiveBackgroundLearning")
-      tic("AdaptiveBackgroundLearning");
+    process("AdaptiveBackgroundLearning", adaptiveBackgroundLearning, img_prep, img_bkgl_fgmask);
 
-    adaptiveBackgroundLearning->process(img_prep,img_bkgl_fgmask);
-
-    if(tictoc == "AdaptiveBackgroundLearning")
-      toc();
-  }
-
-  cv::Mat img_adpmed;
   if(enableDPAdaptiveMedianBGS)
-  {
-    if(tictoc == "DPAdaptiveMedianBGS")
-      tic("DPAdaptiveMedianBGS");
-
-    adaptiveMedian->process(img_prep,img_adpmed);
-
-    if(tictoc == "DPAdaptiveMedianBGS")
-      toc();
-  }
+    process("DPAdaptiveMedianBGS", adaptiveMedian, img_prep, img_adpmed);
   
-  cv::Mat img_grigmm;
   if(enableDPGrimsonGMMBGS)
-  {
-    if(tictoc == "DPGrimsonGMMBGS")
-      tic("DPGrimsonGMMBGS");
-
-    grimsonGMM->process(img_prep,img_grigmm);
-
-    if(tictoc == "DPGrimsonGMMBGS")
-      toc();
-  }
+    process("DPGrimsonGMMBGS", grimsonGMM, img_prep, img_grigmm);
   
-  cv::Mat img_zivgmm;
   if(enableDPZivkovicAGMMBGS)
-  {
-    if(tictoc == "DPZivkovicAGMMBGS")
-      tic("DPZivkovicAGMMBGS");
-
-    zivkovicAGMM->process(img_prep,img_zivgmm);
-
-    if(tictoc == "DPZivkovicAGMMBGS")
-      toc();
-  }
+    process("DPZivkovicAGMMBGS", zivkovicAGMM, img_prep, img_zivgmm);
   
-  cv::Mat img_tmpmean;
   if(enableDPMeanBGS)
-  {
-    if(tictoc == "DPMeanBGS")
-      tic("DPMeanBGS");
-
-    temporalMean->process(img_prep,img_tmpmean);
-
-    if(tictoc == "DPMeanBGS")
-      toc();
-  }
+    process("DPMeanBGS", temporalMean, img_prep, img_tmpmean);
   
-  cv::Mat img_wrenga;
   if(enableDPWrenGABGS)
-  {
-    if(tictoc == "DPWrenGABGS")
-      tic("DPWrenGABGS");
-
-    wrenGA->process(img_prep,img_wrenga);
-
-    if(tictoc == "DPWrenGABGS")
-      toc();
-  }
+    process("DPWrenGABGS", wrenGA, img_prep, img_wrenga);
   
-  cv::Mat img_pramed;
   if(enableDPPratiMediodBGS)
-  {
-    if(tictoc == "DPPratiMediodBGS")
-      tic("DPPratiMediodBGS");
-
-    pratiMediod->process(img_prep,img_pramed);
-
-    if(tictoc == "DPPratiMediodBGS")
-      toc();
-  }
+    process("DPPratiMediodBGS", pratiMediod, img_prep, img_pramed);
   
-  cv::Mat img_eigbkg;
   if(enableDPEigenbackgroundBGS)
-  {
-    if(tictoc == "DPEigenbackgroundBGS")
-      tic("DPEigenbackgroundBGS");
+    process("DPEigenbackgroundBGS", eigenBackground, img_input, img_eigbkg);
 
-    eigenBackground->process(img_input,img_eigbkg);
-
-    if(tictoc == "DPEigenbackgroundBGS")
-      toc();
-  }
-
-  cv::Mat img_t2fgmm_um;
   if(enableT2FGMM_UM)
-  {
-    if(tictoc == "T2FGMM_UM")
-      tic("T2FGMM_UM");
+    process("T2FGMM_UM", type2FuzzyGMM_UM, img_prep, img_t2fgmm_um);
 
-    type2FuzzyGMM_UM->process(img_prep,img_t2fgmm_um);
-
-    if(tictoc == "T2FGMM_UM")
-      toc();
-  }
-
-  cv::Mat img_t2fgmm_uv;
   if(enableT2FGMM_UV)
+    process("T2FGMM_UV", type2FuzzyGMM_UV, img_prep, img_t2fgmm_uv);
+
+  if(enableForegroundMaskAnalysis)
   {
-    if(tictoc == "T2FGMM_UV")
-      tic("T2FGMM_UV");
+    foregroundMaskAnalysis->stopAt = frameToStop;
+    foregroundMaskAnalysis->img_ref_path = imgref;
 
-    type2FuzzyGMM_UV->process(img_prep,img_t2fgmm_uv);
-
-    if(tictoc == "T2FGMM_UV")
-      toc();
+    foregroundMaskAnalysis->process(frameNumber, "FrameDifferenceBGS", img_framediff);
+    foregroundMaskAnalysis->process(frameNumber, "StaticFrameDifferenceBGS", img_staticfdiff);
+    foregroundMaskAnalysis->process(frameNumber, "WeightedMovingMeanBGS", img_wmovmean);
+    foregroundMaskAnalysis->process(frameNumber, "WeightedMovingVarianceBGS", img_movvar);
+    foregroundMaskAnalysis->process(frameNumber, "MixtureOfGaussianV1BGS", img_mog1);
+    foregroundMaskAnalysis->process(frameNumber, "MixtureOfGaussianV2BGS", img_mog2);
+    foregroundMaskAnalysis->process(frameNumber, "AdaptiveBackgroundLearning", img_bkgl_fgmask);
+    foregroundMaskAnalysis->process(frameNumber, "DPAdaptiveMedianBGS", img_adpmed);
+    foregroundMaskAnalysis->process(frameNumber, "DPGrimsonGMMBGS", img_grigmm);
+    foregroundMaskAnalysis->process(frameNumber, "DPZivkovicAGMMBGS", img_zivgmm);
+    foregroundMaskAnalysis->process(frameNumber, "DPMeanBGS", img_tmpmean);
+    foregroundMaskAnalysis->process(frameNumber, "DPWrenGABGS", img_wrenga);
+    foregroundMaskAnalysis->process(frameNumber, "DPPratiMediodBGS", img_pramed);
+    foregroundMaskAnalysis->process(frameNumber, "DPEigenbackgroundBGS", img_eigbkg);
+    foregroundMaskAnalysis->process(frameNumber, "T2FGMM_UM", img_t2fgmm_um);
+    foregroundMaskAnalysis->process(frameNumber, "T2FGMM_UV", img_t2fgmm_uv);
   }
 
   firstTime = false;
-  frameNumber++;
 }
 
 void FrameProcessor::tic(std::string value)
@@ -349,6 +232,8 @@ void FrameProcessor::saveConfig()
   cvWriteString(fs, "tictoc", tictoc.c_str());
 
   cvWriteInt(fs, "enablePreProcessor", enablePreProcessor);
+  
+  cvWriteInt(fs, "enableForegroundMaskAnalysis", enableForegroundMaskAnalysis);
 
   cvWriteInt(fs, "enableFrameDifferenceBGS", enableFrameDifferenceBGS);
   cvWriteInt(fs, "enableStaticFrameDifferenceBGS", enableStaticFrameDifferenceBGS);
@@ -379,6 +264,8 @@ void FrameProcessor::loadConfig()
   tictoc = cvReadStringByName(fs, 0, "tictoc", "");
 
   enablePreProcessor = cvReadIntByName(fs, 0, "enablePreProcessor", true);
+
+  enableForegroundMaskAnalysis = cvReadIntByName(fs, 0, "enableForegroundMaskAnalysis", true);
   
   enableFrameDifferenceBGS = cvReadIntByName(fs, 0, "enableFrameDifferenceBGS", true);
   enableStaticFrameDifferenceBGS = cvReadIntByName(fs, 0, "enableStaticFrameDifferenceBGS", true);

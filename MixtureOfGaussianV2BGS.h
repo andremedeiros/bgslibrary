@@ -5,7 +5,9 @@
 #include <highgui.h>
 #include <opencv2/video/background_segm.hpp>
 
-class MixtureOfGaussianV2BGS
+#include "IBGS.h"
+
+class MixtureOfGaussianV2BGS : public IBGS
 {
 private:
   bool firstTime;

@@ -10,16 +10,14 @@ StaticFrameDifferenceBGS::~StaticFrameDifferenceBGS()
   std::cout << "~StaticFrameDifferenceBGS()" << std::endl;
 }
 
-void StaticFrameDifferenceBGS::setBackgroundRef(const cv::Mat &img_bkg)
-{
-  img_bkg.copyTo(img_background);
-}
-
 void StaticFrameDifferenceBGS::process(const cv::Mat &img_input, cv::Mat &img_output)
 {
-  if(img_input.empty() || img_background.empty())
+  if(img_input.empty())
     return;
 
+  if(img_background.empty())
+    img_input.copyTo(img_background);
+  
   loadConfig();
 
   if(firstTime)

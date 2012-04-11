@@ -4,11 +4,12 @@
 #include <cv.h>
 #include <highgui.h>
 
+#include "IBGS.h"
 #include "GrimsonGMM.h"
 
 using namespace Algorithms::BackgroundSubtraction;
 
-class DPGrimsonGMMBGS
+class DPGrimsonGMMBGS : public IBGS
 {
 private:
   bool firstTime;

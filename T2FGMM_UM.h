@@ -4,11 +4,12 @@
 #include <cv.h>
 #include <highgui.h>
 
+#include "IBGS.h"
 #include "T2FGMM.h"
 
 using namespace Algorithms::BackgroundSubtraction;
 
-class T2FGMM_UM
+class T2FGMM_UM : public IBGS
 {
 private:
   bool firstTime;
