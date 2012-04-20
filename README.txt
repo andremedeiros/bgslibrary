@@ -9,6 +9,7 @@ cd build
 cmake ..
 make
 cd ..
+
+chmod +x use_video.sh use_camera.sh
 ./use_video.sh
 ./use_camera.sh
-
