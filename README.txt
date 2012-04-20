@@ -1,4 +1,4 @@
-﻿#
+#
 # HOW TO COMPILE ON LINUX
 #
 # Requirements:
