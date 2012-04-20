@@ -43,7 +43,7 @@ step. If you compile it under Linux, please uncomment it.
 #include <stdio.h>
 #include <stdarg.h>
 #include "BlobResult.h"
-#include "OpencvDataConversion.h"
+#include "OpenCvDataConversion.h"
 
 #include "BackgroundSubtractionAPI.h"
 
