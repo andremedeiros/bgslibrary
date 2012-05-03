@@ -11,7 +11,7 @@ public:
   static void start(int argc, const char **argv)
   {
     std::cout << "-----------------------------------------" << std::endl;
-    std::cout << "Background Subtraction Library v1.2.0    " << std::endl;
+    std::cout << "Background Subtraction Library v1.3.0    " << std::endl;
     std::cout << "http://code.google.com/p/bgslibrary      " << std::endl;
     std::cout << "                                         " << std::endl;
     std::cout << "Andrews Sobral (andrewssobral@gmail.com) " << std::endl;

@@ -19,11 +19,14 @@ public:
 
 private:
   bool firstTime;
+  long long frameNumber;
   cv::Mat img_foreground;
   cv::Mat img_merged;
   bool showOutput;
   bool saveModel;
   bool disableDetectMode;
+  bool disableLearning;
+  int detectAfter;
   CMultiLayerBGS* BGS;
   Status status;
   IplImage* img;

@@ -20,6 +20,8 @@
 
 #include "package_bgs/tb/T2FGMM_UM.h"
 #include "package_bgs/tb/T2FGMM_UV.h"
+#include "package_bgs/tb/FuzzySugenoIntegral.h"
+#include "package_bgs/tb/FuzzyChoquetIntegral.h"
 
 #include "package_bgs/jmo/MultiLayerBGS.h"
 
@@ -65,6 +67,8 @@ int main(int argc, char **argv)
   /*** TB Package (adapted from Thierry Bouwmans) ***/
   //T2FGMM_UM* bgs = new T2FGMM_UM;
   //T2FGMM_UV* bgs = new T2FGMM_UV;
+  //FuzzySugenoIntegral* bgs = new FuzzySugenoIntegral;
+  //FuzzyChoquetIntegral* bgs = new FuzzyChoquetIntegral;
 
   /*** JMO Package (adapted from Jean-Marc Odobez) ***/
   //MultiLayerBGS* bgs = new MultiLayerBGS;

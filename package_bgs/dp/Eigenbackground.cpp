@@ -168,7 +168,7 @@ void Eigenbackground::UpdateHistory(int frame_num, const RgbImage& new_frame)
 	{
 		CvMat src_row;
 		cvGetRow(m_pcaData, &src_row, frame_num);
-		cvReshape(&src_row, &src_row, 3, new_frame.Ptr()->height); 
-		cvCopy(new_frame.Ptr(), &src_row); 
+		cvReshape(&src_row, &src_row, 3, new_frame.Ptr()->height);
+		cvCopy(new_frame.Ptr(), &src_row);
 	}
 }

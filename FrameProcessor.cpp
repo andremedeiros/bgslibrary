@@ -65,6 +65,12 @@ void FrameProcessor::init()
 
   if(enableT2FGMM_UV)
     type2FuzzyGMM_UV = new T2FGMM_UV;
+
+  if(enableFuzzySugenoIntegral)
+    fuzzySugenoIntegral = new FuzzySugenoIntegral;
+
+  if(enableFuzzyChoquetIntegral)
+    fuzzyChoquetIntegral = new FuzzyChoquetIntegral;
   
   if(enableMultiLayerBGS)
     multiLayerBGS = new MultiLayerBGS;
@@ -154,6 +160,12 @@ void FrameProcessor::process(const cv::Mat &img_input)
   if(enableT2FGMM_UV)
     process("T2FGMM_UV", type2FuzzyGMM_UV, img_prep, img_t2fgmm_uv);
 
+  if(enableFuzzySugenoIntegral)
+    process("FuzzySugenoIntegral", fuzzySugenoIntegral, img_input, img_fsi);
+
+  if(enableFuzzyChoquetIntegral)
+    process("FuzzyChoquetIntegral", fuzzyChoquetIntegral, img_input, img_fsi);
+
   if(enableMultiLayerBGS)
   {
     multiLayerBGS->setStatus(MultiLayerBGS::Status::MLBGS_LEARN);
@@ -197,6 +209,8 @@ void FrameProcessor::process(const cv::Mat &img_input)
     foregroundMaskAnalysis->process(frameNumber, "DPEigenbackgroundBGS", img_eigbkg);
     foregroundMaskAnalysis->process(frameNumber, "T2FGMM_UM", img_t2fgmm_um);
     foregroundMaskAnalysis->process(frameNumber, "T2FGMM_UV", img_t2fgmm_uv);
+    foregroundMaskAnalysis->process(frameNumber, "FuzzySugenoIntegral", img_fsi);
+    foregroundMaskAnalysis->process(frameNumber, "FuzzyChoquetIntegral", img_fci);
     foregroundMaskAnalysis->process(frameNumber, "MultiLayerBGS", img_mlbgs);
     foregroundMaskAnalysis->process(frameNumber, "LBSimpleGaussian", img_lb_sg);
     foregroundMaskAnalysis->process(frameNumber, "LBFuzzyGaussian", img_lb_fg);
@@ -248,6 +262,12 @@ void FrameProcessor::finish(void)
   
   if(enableMultiLayerBGS)
     delete multiLayerBGS;
+  
+  if(enableFuzzyChoquetIntegral)
+    delete fuzzyChoquetIntegral;
+
+  if(enableFuzzySugenoIntegral)
+    delete fuzzySugenoIntegral;
 
   if(enableT2FGMM_UV)
     delete type2FuzzyGMM_UV;
@@ -341,6 +361,8 @@ void FrameProcessor::saveConfig()
 
   cvWriteInt(fs, "enableT2FGMM_UM", enableT2FGMM_UM);
   cvWriteInt(fs, "enableT2FGMM_UV", enableT2FGMM_UV);
+  cvWriteInt(fs, "enableFuzzySugenoIntegral", enableFuzzySugenoIntegral);
+  cvWriteInt(fs, "enableFuzzyChoquetIntegral", enableFuzzyChoquetIntegral);
 
   cvWriteInt(fs, "enableMultiLayerBGS", enableMultiLayerBGS);
 
@@ -381,6 +403,8 @@ void FrameProcessor::loadConfig()
 
   enableT2FGMM_UM = cvReadIntByName(fs, 0, "enableT2FGMM_UM", false);
   enableT2FGMM_UV = cvReadIntByName(fs, 0, "enableT2FGMM_UV", false);
+  enableFuzzySugenoIntegral = cvReadIntByName(fs, 0, "enableFuzzySugenoIntegral", false);
+  enableFuzzyChoquetIntegral = cvReadIntByName(fs, 0, "enableFuzzyChoquetIntegral", false);
 
   enableMultiLayerBGS = cvReadIntByName(fs, 0, "enableMultiLayerBGS", false);
 

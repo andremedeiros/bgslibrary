@@ -1,7 +1,8 @@
 #include "MultiLayerBGS.h"
 
 MultiLayerBGS::MultiLayerBGS() : firstTime(true), showOutput(true), 
-  bg_model_preload(""), saveModel(false), disableDetectMode(true), loadDefaultParams(true)
+  bg_model_preload(""), saveModel(false), disableLearning(false), disableDetectMode(true), loadDefaultParams(true), 
+  detectAfter(0), frameNumber(0)
 {
   std::cout << "MultiLayerBGS()" << std::endl;
 }
@@ -79,10 +80,19 @@ void MultiLayerBGS::process(const cv::Mat &img_input, cv::Mat &img_output)
     }
 
     if(status == MLBGS_DETECT)
-      BGS->m_disableLearning = false;
+    {
+      BGS->m_disableLearning = disableLearning;
+
+      if(disableLearning)
+        std::cout << "MultiLayerBGS disabled learning in DETECT mode" << std::endl;
+      else
+        std::cout << "MultiLayerBGS enabled learning in DETECT mode" << std::endl;
+    }
 
     if(loadDefaultParams)
     {
+      std::cout << "MultiLayerBGS loading default params" << std::endl;
+
       max_mode_num = 5;
       weight_updating_constant = 5.0;
       texture_weight = 0.5;
@@ -98,6 +108,8 @@ void MultiLayerBGS::process(const cv::Mat &img_input, cv::Mat &img_output)
       bilater_filter_sigma_s = 3.0;
       bilater_filter_sigma_r = 0.1;
     }
+    else
+      std::cout << "MultiLayerBGS loading config params" << std::endl;
 
     BGS->m_nMaxLBPModeNum = max_mode_num;
     BGS->m_fWeightUpdatingConstant = weight_updating_constant;
@@ -116,6 +128,7 @@ void MultiLayerBGS::process(const cv::Mat &img_input, cv::Mat &img_output)
 
     if(loadDefaultParams)
     {
+      //frame_duration = 1.0 / 30.0;
       //frame_duration = 1.0 / 25.0;
       frame_duration = 1.0 / 10.0;
     }
@@ -166,6 +179,26 @@ void MultiLayerBGS::process(const cv::Mat &img_input, cv::Mat &img_output)
   //cvCopy(inputImage, img);
   //delete inputImage;
 
+  if(detectAfter > 0 && detectAfter == frameNumber)
+  {
+    std::cout << "MultiLayerBGS in DETECT mode" << std::endl;
+
+    status = MLBGS_DETECT;
+
+    mode_learn_rate_per_second = 0.01;
+    weight_learn_rate_per_second = 0.01;
+    init_mode_weight = 0.001;
+
+    BGS->SetParameters(max_mode_num, mode_learn_rate_per_second, weight_learn_rate_per_second, init_mode_weight);
+
+    BGS->m_disableLearning = disableLearning;
+
+    if(disableLearning)
+      std::cout << "MultiLayerBGS disabled learning in DETECT mode" << std::endl;
+    else
+      std::cout << "MultiLayerBGS enabled learning in DETECT mode" << std::endl;
+  }
+
   IplImage* img = new IplImage(img_input);
 
   BGS->SetRGBInputImage(img);
@@ -192,6 +225,7 @@ void MultiLayerBGS::process(const cv::Mat &img_input, cv::Mat &img_output)
   //cvReleaseImage(&img);
 
   firstTime = false;
+  frameNumber++;
 }
 
 void MultiLayerBGS::saveConfig()
@@ -200,7 +234,9 @@ void MultiLayerBGS::saveConfig()
 
   cvWriteString(fs, "preloadModel", bg_model_preload.c_str());
   cvWriteInt(fs, "saveModel", saveModel);
+  cvWriteInt(fs, "detectAfter", detectAfter);
   cvWriteInt(fs, "disableDetectMode", disableDetectMode);
+  cvWriteInt(fs, "disableLearningInDetecMode", disableLearning);
   cvWriteInt(fs, "loadDefaultParams", loadDefaultParams);
   
   cvWriteInt(fs, "max_mode_num", max_mode_num);
@@ -239,7 +275,10 @@ void MultiLayerBGS::loadConfig()
   
   bg_model_preload = cvReadStringByName(fs, 0, "preloadModel", "");
   saveModel = cvReadIntByName(fs, 0, "saveModel", false);
+  detectAfter = cvReadIntByName(fs, 0, "detectAfter", 0);
   disableDetectMode = cvReadIntByName(fs, 0, "disableDetectMode", true);
+  disableLearning = cvReadIntByName(fs, 0, "disableLearningInDetecMode", false);
+  loadDefaultParams = cvReadIntByName(fs, 0, "loadDefaultParams", true);
 
   max_mode_num = cvReadIntByName(fs, 0, "max_mode_num", 5);
   weight_updating_constant = cvReadRealByName(fs, 0, "weight_updating_constant", 5.0);

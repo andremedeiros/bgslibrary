@@ -24,6 +24,8 @@
 
 #include "package_bgs/tb/T2FGMM_UM.h"
 #include "package_bgs/tb/T2FGMM_UV.h"
+#include "package_bgs/tb/FuzzySugenoIntegral.h"
+#include "package_bgs/tb/FuzzyChoquetIntegral.h"
 
 #include "package_bgs/jmo/MultiLayerBGS.h"
 
@@ -111,6 +113,14 @@ private:
   cv::Mat img_t2fgmm_uv;
   T2FGMM_UV* type2FuzzyGMM_UV;
   bool enableT2FGMM_UV;
+
+  cv::Mat img_fsi;
+  FuzzySugenoIntegral* fuzzySugenoIntegral;
+  bool enableFuzzySugenoIntegral;
+
+  cv::Mat img_fci;
+  FuzzyChoquetIntegral* fuzzyChoquetIntegral;
+  bool enableFuzzyChoquetIntegral;
   
   cv::Mat img_mlbgs;
   MultiLayerBGS* multiLayerBGS;
