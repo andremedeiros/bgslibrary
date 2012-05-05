@@ -164,7 +164,7 @@ void FrameProcessor::process(const cv::Mat &img_input)
     process("FuzzySugenoIntegral", fuzzySugenoIntegral, img_input, img_fsi);
 
   if(enableFuzzyChoquetIntegral)
-    process("FuzzyChoquetIntegral", fuzzyChoquetIntegral, img_input, img_fsi);
+    process("FuzzyChoquetIntegral", fuzzyChoquetIntegral, img_input, img_fci);
 
   if(enableMultiLayerBGS)
   {
