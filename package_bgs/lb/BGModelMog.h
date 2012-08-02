@@ -27,11 +27,11 @@ namespace lb_library
 {
   namespace MixtureOfGaussians
   {
-    const int NUMBERGAUSSIANS = 3;
-    const int LEARNINGRATEMOG = 0.001;
-    const int THRESHOLDMOG = 2.5;
-    const int BGTHRESHOLDMOG = 0.5;
-    const int INITIALVARMOG = 50.0;
+    const unsigned int NUMBERGAUSSIANS = 3;
+    const float LEARNINGRATEMOG = 0.001f;
+    const float THRESHOLDMOG = 2.5f;
+    const float BGTHRESHOLDMOG = 0.5f;
+    const float INITIALVARMOG = 50.0f;
 
     typedef struct tagMOGDATA
     {
