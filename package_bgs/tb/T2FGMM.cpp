@@ -38,7 +38,7 @@ T2FGMM::~T2FGMM()
 
 void T2FGMM::Initalize(const BgsParams& param)
 {
-  m_params = (T2FGMMParams&)param;
+  m_params = (T2FGMMParams&) param;
 
   // Tbf - the threshold
   m_bg_threshold = 0.75f;	// 1-cf from the paper 
@@ -55,12 +55,12 @@ void T2FGMM::Initalize(const BgsParams& param)
   m_background = cvCreateImage(cvSize(m_params.Width(), m_params.Height()), IPL_DEPTH_8U, 3);
 
   // Factor control for the T2FGMM-UM [0,3]
-  //km=(float)1.5;
-  km = (float)m_params.KM();
+  //km = (float) 1.5;
+  km = (float) m_params.KM();
 
   // Factor control for the T2FGMM-UV [0.3,1]
-  //kv=(float)0.6;
-  kv = (float)m_params.KV();
+  //kv = (float) 0.6;
+  kv = (float) m_params.KV();
 }
 
 RgbImage* T2FGMM::Background()
@@ -89,17 +89,16 @@ void T2FGMM::Update(int frame_num, const RgbImage& data,  const BwImage& update_
 }
 
 void T2FGMM::SubtractPixel(long posPixel, const RgbPixel& pixel, unsigned char& numModes, 
-  unsigned char& low_threshold, unsigned char& high_threshold)
+                           unsigned char& low_threshold, unsigned char& high_threshold)
 {
   // calculate distances to the modes (+ sort???)
   // here we need to go in descending order!!!
   long pos;
-  bool bFitsPDF=false;
-  bool bBackgroundLow=false;
-  bool bBackgroundHigh=false;
+  bool bFitsPDF = false;
+  bool bBackgroundLow = false;
+  bool bBackgroundHigh = false;
 
-  float fOneMinAlpha = 1-m_params.Alpha();
-
+  float fOneMinAlpha = 1 - m_params.Alpha();
   float totalWeight = 0.0f;
 
   // calculate number of Gaussians to include in the background model
@@ -113,15 +112,13 @@ void T2FGMM::SubtractPixel(long posPixel, const RgbPixel& pixel, unsigned char& 
       sum += m_modes[posPixel+i].weight;
     }
     else
-    {
       break;
-    }
   }
 
   // update all distributions and check for match with current pixel
-  for (int iModes=0; iModes < numModes; iModes++)
+  for(int iModes = 0; iModes < numModes; iModes++)
   {
-    pos=posPixel+iModes;
+    pos = posPixel + iModes;
     float weight = m_modes[pos].weight;
 
     // fit not found yet
@@ -134,12 +131,12 @@ void T2FGMM::SubtractPixel(long posPixel, const RgbPixel& pixel, unsigned char& 
       float muG = m_modes[pos].muG;
       float muB = m_modes[pos].muB;
 
-      float km = 2;
-      float kv= 0.9;
+      //float km = 2;
+      //float kv = 0.9;
 
-      float dR=fabs(muR - pixel(0));
-      float dG=fabs(muG - pixel(1));
-      float dB=fabs(muB - pixel(2));
+      float dR = fabs(muR - pixel(0));
+      float dG = fabs(muG - pixel(1));
+      float dB = fabs(muB - pixel(2));
 
       // calculate the squared distance
       float HR;
@@ -149,17 +146,17 @@ void T2FGMM::SubtractPixel(long posPixel, const RgbPixel& pixel, unsigned char& 
       // T2FGMM-UM
       if(m_params.Type() == TYPE_T2FGMM_UM)
       {
-        if ((pixel(0)<muR-km*var)|| (pixel(0)>muR+km*var))
+        if((pixel(0)<muR-km*var)|| (pixel(0)>muR+km*var))
           HR=2*km*dR/var;
         else
           HR=dR*dR/(2*var*var)+km*dR/var+km*km/2;
 
-        if ((pixel(1)<muG-km*var)|| (pixel(1)>muG+km*var))
+        if((pixel(1)<muG-km*var)|| (pixel(1)>muG+km*var))
           HG=2*km*dG/var;
         else
           HG=dG*dG/(2*var*var)+km*dG/var+km*km/2;
 
-        if ((pixel(2)<muB-km*var)|| (pixel(2)>muB+km*var))
+        if((pixel(2)<muB-km*var)|| (pixel(2)>muB+km*var))
           HB=2*km*dB/var;
         else
           HB=dB*dB/(2*var*var)+km*dB/var+km*km/2;
@@ -168,28 +165,28 @@ void T2FGMM::SubtractPixel(long posPixel, const RgbPixel& pixel, unsigned char& 
       // T2FGMM-UV
       if(m_params.Type() == TYPE_T2FGMM_UV)
       {
-        HR=(1/(kv*kv)-kv*kv)*(pixel(0)-muR)*(pixel(0)-muR)/(2*var);
-        HG=(1/(kv*kv)-kv*kv)*(pixel(1)-muG)*(pixel(1)-muG)/(2*var);
-        HB=(1/(kv*kv)-kv*kv)*(pixel(2)-muB)*(pixel(2)-muB)/(2*var);
+        HR = (1/(kv*kv)-kv*kv) * (pixel(0)-muR) * (pixel(0)-muR)/(2*var);
+        HG = (1/(kv*kv)-kv*kv) * (pixel(1)-muG) * (pixel(1)-muG)/(2*var);
+        HB = (1/(kv*kv)-kv*kv) * (pixel(2)-muB) * (pixel(2)-muB)/(2*var);
       }
       
       // calculate the squared distance
       float dist = (HR*HR + HG*HG + HB*HB);
 
-      if(dist <m_params.HighThreshold()*var && iModes < backgroundGaussians)
+      if(dist < m_params.HighThreshold()*var && iModes < backgroundGaussians)
         bBackgroundHigh = true;
 
       // a match occurs when the pixel is within sqrt(fTg) standard deviations of the distribution
       if(dist < m_params.LowThreshold()*var)
       {
-        bFitsPDF=true;
+        bFitsPDF = true;
 
         // check if this Gaussian is part of the background model
         if(iModes < backgroundGaussians) 
           bBackgroundLow = true;
 
         //update distribution
-        float k = m_params.Alpha()/weight;
+        float k = m_params.Alpha() / weight;
         weight = fOneMinAlpha*weight + m_params.Alpha();
         m_modes[pos].weight = weight;
         m_modes[pos].muR = muR - k*(dR);
@@ -204,7 +201,7 @@ void T2FGMM::SubtractPixel(long posPixel, const RgbPixel& pixel, unsigned char& 
       else
       {
         weight = fOneMinAlpha*weight;
-        if (weight < 0.0)
+        if(weight < 0.0)
         {
           weight=0.0;
           numModes--;
@@ -217,7 +214,7 @@ void T2FGMM::SubtractPixel(long posPixel, const RgbPixel& pixel, unsigned char& 
     else
     {
       weight = fOneMinAlpha*weight;
-      if (weight < 0.0)
+      if(weight < 0.0)
       {
         weight=0.0;
         numModes--;
@@ -231,7 +228,7 @@ void T2FGMM::SubtractPixel(long posPixel, const RgbPixel& pixel, unsigned char& 
 
   // renormalize weights so they add to one
   double invTotalWeight = 1.0 / totalWeight;
-  for (int iLocal = 0; iLocal < numModes; iLocal++)
+  for(int iLocal = 0; iLocal < numModes; iLocal++)
   {
     m_modes[posPixel + iLocal].weight *= (float)invTotalWeight;
     m_modes[posPixel + iLocal].significants = m_modes[posPixel + iLocal].weight 
@@ -242,17 +239,13 @@ void T2FGMM::SubtractPixel(long posPixel, const RgbPixel& pixel, unsigned char& 
   qsort(&m_modes[posPixel],  numModes, sizeof(GMM), compareT2FGMM);
 
   // make new mode if needed and exit
-  if (!bFitsPDF)
+  if(!bFitsPDF)
   {
-    if (numModes < m_params.MaxModes())
-    {
+    if(numModes < m_params.MaxModes())
       numModes++;
-    }
-    else
-    {
+    //else
       // the weakest mode will be replaced
-    }
-
+    
     pos = posPixel + numModes-1;
 
     m_modes[pos].muR = pixel.ch[0];
@@ -261,7 +254,7 @@ void T2FGMM::SubtractPixel(long posPixel, const RgbPixel& pixel, unsigned char& 
     m_modes[pos].variance = m_variance;
     m_modes[pos].significants = 0;			// will be set below
 
-    if (numModes==1)
+    if (numModes == 1)
       m_modes[pos].weight = 1;
     else
       m_modes[pos].weight = m_params.Alpha();
@@ -269,18 +262,14 @@ void T2FGMM::SubtractPixel(long posPixel, const RgbPixel& pixel, unsigned char& 
     //renormalize weights
     int iLocal;
     float sum = 0.0;
-    for (iLocal = 0; iLocal < numModes; iLocal++)
-    {
+    for(iLocal = 0; iLocal < numModes; iLocal++)
       sum += m_modes[posPixel+ iLocal].weight;
-    }
-
+    
     double invSum = 1.0/sum;
-    for (iLocal = 0; iLocal < numModes; iLocal++)
+    for(iLocal = 0; iLocal < numModes; iLocal++)
     {
       m_modes[posPixel + iLocal].weight *= (float)invSum;
-      m_modes[posPixel + iLocal].significants = m_modes[posPixel + iLocal].weight 
-        / sqrt(m_modes[posPixel + iLocal].variance);
-
+      m_modes[posPixel + iLocal].significants = m_modes[posPixel + iLocal].weight / sqrt(m_modes[posPixel + iLocal].variance);
     }
   }
 
@@ -288,22 +277,14 @@ void T2FGMM::SubtractPixel(long posPixel, const RgbPixel& pixel, unsigned char& 
   qsort(&(m_modes[posPixel]), numModes, sizeof(GMM), compareT2FGMM);
 
   if(bBackgroundLow)
-  {
     low_threshold = BACKGROUND;
-  }
   else
-  {
     low_threshold = FOREGROUND;
-  }
-
+  
   if(bBackgroundHigh)
-  {
     high_threshold = BACKGROUND;
-  }
   else
-  {
     high_threshold = FOREGROUND;
-  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -325,16 +306,16 @@ void T2FGMM::Subtract(int frame_num, const RgbImage& data, BwImage& low_threshol
     for(unsigned int c = 0; c < m_params.Width(); ++c)
     {		
       // update model + background subtract
-      posPixel=(r*m_params.Width()+c)*m_params.MaxModes();
+      posPixel = (r*m_params.Width() + c) * m_params.MaxModes();
 
       SubtractPixel(posPixel, data(r,c), m_modes_per_pixel(r,c), low_threshold, high_threshold);
 
       low_threshold_mask(r,c) = low_threshold;
       high_threshold_mask(r,c) = high_threshold;
 
-      m_background(r,c,0) = (unsigned char)m_modes[posPixel].muR;
-      m_background(r,c,1) = (unsigned char)m_modes[posPixel].muG;
-      m_background(r,c,2) = (unsigned char)m_modes[posPixel].muB;
+      m_background(r,c,0) = (unsigned char) m_modes[posPixel].muR;
+      m_background(r,c,1) = (unsigned char) m_modes[posPixel].muG;
+      m_background(r,c,2) = (unsigned char) m_modes[posPixel].muB;
     }
   }
 }

@@ -54,7 +54,7 @@ namespace Algorithms
 			float weight;
 			float significants;		// this is equal to weight / standard deviation and is used to
 														// determine which Gaussians should be part of the background model
-		}GMM;
+		} GMM;
 
 		// --- User adjustable parameters used by the Grimson GMM BGS algorithm ---
 		class GrimsonParams : public BgsParams

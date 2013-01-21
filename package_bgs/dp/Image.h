@@ -107,7 +107,6 @@ private:
 
 const unsigned char NUM_CHANNELS = 3;
 
-
 // --- Pixel Types ------------------------------------------------------------
 
 class RgbPixel
@@ -165,7 +164,6 @@ public:
 
 	float ch[3];
 };
-
 
 // --- Image Types ------------------------------------------------------------
 
@@ -337,8 +335,6 @@ public:
 		return (float)imgp->imageData[r*imgp->widthStep+c*sizeof(float)];
 	}
 };
-
-
 
 // --- Image Functions --------------------------------------------------------
 

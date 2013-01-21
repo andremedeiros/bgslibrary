@@ -1,6 +1,6 @@
 /****************************************************************************
 *
-* T2FGMM.h
+* T2FMRF.h
 *
 * Purpose: Implementation of the T2 Fuzzy Gaussian Mixture Models (T2GMMs) 
 * "Modeling of Dynamic Backgrounds by Type-2 Fuzzy Gaussians Mixture Models"
@@ -12,8 +12,8 @@
 * Zivkovic's code can be obtained at: www.zoranz.net
 ******************************************************************************/
 
-#ifndef T2F_GMM_
-#define T2F_GMM_
+#ifndef T2F_MRF_
+#define T2F_MRF_
 
 #include "../dp/Bgs.h"
 #include "../dp/GrimsonGMM.h"
@@ -22,11 +22,36 @@ namespace Algorithms
 {
   namespace BackgroundSubtraction
   {
-    const int TYPE_T2FGMM_UM = 0;
-    const int TYPE_T2FGMM_UV = 1;
+    const int TYPE_T2FMRF_UM = 0;
+    const int TYPE_T2FMRF_UV = 1;
+
+    enum HiddenState {background, foreground};
+
+    typedef struct HMMState 
+    {
+      float T;
+      //Hidden State
+      HiddenState State;
+      //transition probability
+      float Ab2b;
+      float Ab2f;
+      float Af2f;
+      float Af2b;
+    } HMM;
+
+    //typedef struct GMMGaussian
+    //{
+    //  float variance;
+    //  float muR;
+    //  float muG;
+    //  float muB;
+    //  float weight;
+    //  float significants; // this is equal to weight / standard deviation and is used to
+    //  // determine which Gaussians should be part of the background model
+    //} GMM;
 
     // --- User adjustable parameters used by the T2F GMM BGS algorithm ---
-    class T2FGMMParams : public BgsParams
+    class T2FMRFParams : public BgsParams
     {
     public:
       float &LowThreshold() { return m_low_threshold; }
@@ -56,36 +81,38 @@ namespace Algorithms
       // Maximum number of modes (Gaussian components) that will be used per pixel
       int m_max_modes;
 
-      // T2FGMM_UM / T2FGMM_UV
+      // T2FMRF_UM / T2FMRF_UV
       int m_type;
 
-      // Factor control for the T2FGMM-UM
+      // Factor control for the T2FMRF-UM
       float m_km;
 
-      // Factor control for the T2FGMM-UV
+      // Factor control for the T2FMRF-UV
       float m_kv;
     };
 
     // --- T2FGMM BGS algorithm ---
-    class T2FGMM : public Bgs
+    class T2FMRF : public Bgs
     {
     public:
-      T2FGMM();
-      ~T2FGMM();
+      T2FMRF();
+      ~T2FMRF();
 
       void Initalize(const BgsParams& param);
-
       void InitModel(const RgbImage& data);
       void Subtract(int frame_num, const RgbImage& data, BwImage& low_threshold_mask, BwImage& high_threshold_mask);	
       void Update(int frame_num, const RgbImage& data, const BwImage& update_mask);
 
       RgbImage* Background();
 
+      GMM *gmm(void);
+      HMM *hmm(void);
+
     private:	
-      void SubtractPixel(long posPixel, const RgbPixel& pixel, unsigned char& numModes, unsigned char& lowThreshold, unsigned char& highThreshold);
+      void SubtractPixel(long posPixel, long posGMode, const RgbPixel& pixel, unsigned char& numModes, unsigned char& lowThreshold, unsigned char& highThreshold);
 
       // User adjustable parameters
-      T2FGMMParams m_params;
+      T2FMRFParams m_params;
 
       // Threshold when the component becomes significant enough to be included into
       // the background model. It is the TB = 1-cf from the paper. So I use cf=0.1 => TB=0.9
@@ -101,6 +128,9 @@ namespace Algorithms
       // Dynamic array for the mixture of Gaussians
       GMM* m_modes;
 
+      //Dynamic array for the hidden state
+      HMM* m_state;
+
       // Number of Gaussian components per pixel
       BwImage m_modes_per_pixel;
 
@@ -109,7 +139,6 @@ namespace Algorithms
 
       // Factor control for the T2FGMM-UM
       float km;
-
       // Factor control for the T2FGMM-UV
       float kv;
     };
