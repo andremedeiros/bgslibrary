@@ -103,14 +103,9 @@ int main(int argc, char **argv)
     cv::Mat img_input(frame);
     cv::imshow("input", img_input);
 
-    cv::Mat img_gray;
-    cv::cvtColor(img_input, img_gray, CV_BGR2GRAY);
-    cv::imshow("gray", img_gray);
-    
-    // bgs internally shows the foreground mask image
+    // bgs->process(...) method internally shows the foreground mask image
     cv::Mat img_mask;
-    bgs->process(img_gray, img_mask); // default
-    //bgs->process(img_input, img_mask); // use it for JMO, PT, TB and LB pkg's
+    bgs->process(img_input, img_mask);
     
     //if(!img_mask.empty())
     //  do something

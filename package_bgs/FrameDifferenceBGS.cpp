@@ -28,6 +28,9 @@ void FrameDifferenceBGS::process(const cv::Mat &img_input, cv::Mat &img_output)
 
   cv::absdiff(img_input_prev, img_input, img_foreground);
 
+  if(img_foreground.channels() == 3)
+    cv::cvtColor(img_foreground, img_foreground, CV_BGR2GRAY);
+
   if(enableThreshold)
     cv::threshold(img_foreground, img_foreground, threshold, 255, cv::THRESH_BINARY);
 

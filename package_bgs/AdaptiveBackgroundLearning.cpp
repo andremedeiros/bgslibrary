@@ -48,6 +48,9 @@ void AdaptiveBackgroundLearning::process(const cv::Mat &img_input, cv::Mat &img_
   cv::Mat img_foreground(img_input.size(), CV_8U);
   img_diff_f.convertTo(img_foreground, CV_8U, 255.0/(maxVal - minVal), -minVal);
 
+  if(img_foreground.channels() == 3)
+    cv::cvtColor(img_foreground, img_foreground, CV_BGR2GRAY);
+
   if(enableThreshold)
     cv::threshold(img_foreground, img_foreground, threshold, 255, cv::THRESH_BINARY);
   
