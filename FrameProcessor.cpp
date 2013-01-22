@@ -39,6 +39,9 @@ void FrameProcessor::init()
   if(enableAdaptiveBackgroundLearning)
     adaptiveBackgroundLearning = new AdaptiveBackgroundLearning;
 
+  if(enableGMG)
+    gmg = new GMG;
+
   if(enableDPAdaptiveMedianBGS)
     adaptiveMedian = new DPAdaptiveMedianBGS;
 
@@ -66,6 +69,12 @@ void FrameProcessor::init()
   if(enableT2FGMM_UV)
     type2FuzzyGMM_UV = new T2FGMM_UV;
 
+  if(enableT2FMRF_UM)
+    type2FuzzyMRF_UM = new T2FMRF_UM;
+
+  if(enableT2FMRF_UV)
+    type2FuzzyMRF_UV = new T2FMRF_UV;
+
   if(enableFuzzySugenoIntegral)
     fuzzySugenoIntegral = new FuzzySugenoIntegral;
 
@@ -74,6 +83,9 @@ void FrameProcessor::init()
   
   if(enableMultiLayerBGS)
     multiLayerBGS = new MultiLayerBGS;
+
+  if(enablePBAS)
+    pixelBasedAdaptiveSegmenter = new PixelBasedAdaptiveSegmenter;
   
   if(enableLBSimpleGaussian)
     lbSimpleGaussian = new LBSimpleGaussian;
@@ -133,6 +145,10 @@ void FrameProcessor::process(const cv::Mat &img_input)
   if(enableAdaptiveBackgroundLearning)
     process("AdaptiveBackgroundLearning", adaptiveBackgroundLearning, img_prep, img_bkgl_fgmask);
 
+  if(enableGMG)
+    process("GMG", gmg, img_prep, img_gmg);
+
+  /*** DP Package (adapted from Donovan Parks) ***/
   if(enableDPAdaptiveMedianBGS)
     process("DPAdaptiveMedianBGS", adaptiveMedian, img_prep, img_adpmed);
   
@@ -152,41 +168,54 @@ void FrameProcessor::process(const cv::Mat &img_input)
     process("DPPratiMediodBGS", pratiMediod, img_prep, img_pramed);
   
   if(enableDPEigenbackgroundBGS)
-    process("DPEigenbackgroundBGS", eigenBackground, img_input, img_eigbkg);
+    process("DPEigenbackgroundBGS", eigenBackground, img_prep, img_eigbkg);
 
+  /*** TB Package (adapted from Thierry Bouwmans) ***/
   if(enableT2FGMM_UM)
     process("T2FGMM_UM", type2FuzzyGMM_UM, img_prep, img_t2fgmm_um);
 
   if(enableT2FGMM_UV)
     process("T2FGMM_UV", type2FuzzyGMM_UV, img_prep, img_t2fgmm_uv);
 
+  if(enableT2FMRF_UM)
+    process("T2FMRF_UM", type2FuzzyMRF_UM, img_prep, img_t2fmrf_um);
+
+  if(enableT2FMRF_UV)
+    process("T2FMRF_UV", type2FuzzyMRF_UV, img_prep, img_t2fmrf_uv);
+
   if(enableFuzzySugenoIntegral)
-    process("FuzzySugenoIntegral", fuzzySugenoIntegral, img_input, img_fsi);
+    process("FuzzySugenoIntegral", fuzzySugenoIntegral, img_prep, img_fsi);
 
   if(enableFuzzyChoquetIntegral)
-    process("FuzzyChoquetIntegral", fuzzyChoquetIntegral, img_input, img_fci);
+    process("FuzzyChoquetIntegral", fuzzyChoquetIntegral, img_prep, img_fci);
 
+  /*** JMO Package (adapted from Jean-Marc Odobez) ***/
   if(enableMultiLayerBGS)
   {
     multiLayerBGS->setStatus(MultiLayerBGS::Status::MLBGS_LEARN);
     //multiLayerBGS->setStatus(MultiLayerBGS::Status::MLBGS_DETECT);
-    process("MultiLayerBGS", multiLayerBGS, img_input, img_mlbgs);
+    process("MultiLayerBGS", multiLayerBGS, img_prep, img_mlbgs);
   }
   
+  /*** PT Package (adapted from Hofmann) ***/
+  if(enablePBAS)
+    process("PBAS", pixelBasedAdaptiveSegmenter, img_prep, img_pt_pbas);
+
+  /*** LB Package (adapted from Laurence Bender) ***/
   if(enableLBSimpleGaussian)
-    process("LBSimpleGaussian", lbSimpleGaussian, img_input, img_lb_sg);
+    process("LBSimpleGaussian", lbSimpleGaussian, img_prep, img_lb_sg);
   
   if(enableLBFuzzyGaussian)
-    process("LBFuzzyGaussian", lbFuzzyGaussian, img_input, img_lb_fg);
+    process("LBFuzzyGaussian", lbFuzzyGaussian, img_prep, img_lb_fg);
 
   if(enableLBMixtureOfGaussians)
-    process("LBMixtureOfGaussians", lbMixtureOfGaussians, img_input, img_lb_mog);
+    process("LBMixtureOfGaussians", lbMixtureOfGaussians, img_prep, img_lb_mog);
 
   if(enableLBAdaptiveSOM)
-    process("LBAdaptiveSOM", lbAdaptiveSOM, img_input, img_lb_som);
+    process("LBAdaptiveSOM", lbAdaptiveSOM, img_prep, img_lb_som);
 
   if(enableLBFuzzyAdaptiveSOM)
-    process("LBFuzzyAdaptiveSOM", lbFuzzyAdaptiveSOM, img_input, img_lb_fsom);
+    process("LBFuzzyAdaptiveSOM", lbFuzzyAdaptiveSOM, img_prep, img_lb_fsom);
 
   if(enableForegroundMaskAnalysis)
   {
@@ -200,6 +229,7 @@ void FrameProcessor::process(const cv::Mat &img_input)
     foregroundMaskAnalysis->process(frameNumber, "MixtureOfGaussianV1BGS", img_mog1);
     foregroundMaskAnalysis->process(frameNumber, "MixtureOfGaussianV2BGS", img_mog2);
     foregroundMaskAnalysis->process(frameNumber, "AdaptiveBackgroundLearning", img_bkgl_fgmask);
+    foregroundMaskAnalysis->process(frameNumber, "GMG", img_gmg);
     foregroundMaskAnalysis->process(frameNumber, "DPAdaptiveMedianBGS", img_adpmed);
     foregroundMaskAnalysis->process(frameNumber, "DPGrimsonGMMBGS", img_grigmm);
     foregroundMaskAnalysis->process(frameNumber, "DPZivkovicAGMMBGS", img_zivgmm);
@@ -209,9 +239,12 @@ void FrameProcessor::process(const cv::Mat &img_input)
     foregroundMaskAnalysis->process(frameNumber, "DPEigenbackgroundBGS", img_eigbkg);
     foregroundMaskAnalysis->process(frameNumber, "T2FGMM_UM", img_t2fgmm_um);
     foregroundMaskAnalysis->process(frameNumber, "T2FGMM_UV", img_t2fgmm_uv);
+    foregroundMaskAnalysis->process(frameNumber, "T2FMRF_UM", img_t2fmrf_um);
+    foregroundMaskAnalysis->process(frameNumber, "T2FMRF_UV", img_t2fmrf_uv);
     foregroundMaskAnalysis->process(frameNumber, "FuzzySugenoIntegral", img_fsi);
     foregroundMaskAnalysis->process(frameNumber, "FuzzyChoquetIntegral", img_fci);
     foregroundMaskAnalysis->process(frameNumber, "MultiLayerBGS", img_mlbgs);
+    foregroundMaskAnalysis->process(frameNumber, "PBAS", img_pt_pbas);
     foregroundMaskAnalysis->process(frameNumber, "LBSimpleGaussian", img_lb_sg);
     foregroundMaskAnalysis->process(frameNumber, "LBFuzzyGaussian", img_lb_fg);
     foregroundMaskAnalysis->process(frameNumber, "LBMixtureOfGaussians", img_lb_mog);
@@ -260,6 +293,9 @@ void FrameProcessor::finish(void)
   if(enableLBSimpleGaussian)
     delete lbSimpleGaussian;
   
+  if(enablePBAS)
+    delete pixelBasedAdaptiveSegmenter;
+
   if(enableMultiLayerBGS)
     delete multiLayerBGS;
   
@@ -268,6 +304,12 @@ void FrameProcessor::finish(void)
 
   if(enableFuzzySugenoIntegral)
     delete fuzzySugenoIntegral;
+
+  if(enableT2FMRF_UV)
+    delete type2FuzzyMRF_UV;
+
+  if(enableT2FMRF_UM)
+    delete type2FuzzyMRF_UM;
 
   if(enableT2FGMM_UV)
     delete type2FuzzyGMM_UV;
@@ -295,6 +337,9 @@ void FrameProcessor::finish(void)
 
   if(enableDPAdaptiveMedianBGS)
     delete adaptiveMedian;
+
+  if(enableGMG)
+    delete gmg;
 
   if(enableAdaptiveBackgroundLearning)
     delete adaptiveBackgroundLearning;
@@ -350,6 +395,7 @@ void FrameProcessor::saveConfig()
   cvWriteInt(fs, "enableMixtureOfGaussianV1BGS", enableMixtureOfGaussianV1BGS);
   cvWriteInt(fs, "enableMixtureOfGaussianV2BGS", enableMixtureOfGaussianV2BGS);
   cvWriteInt(fs, "enableAdaptiveBackgroundLearning", enableAdaptiveBackgroundLearning);
+  cvWriteInt(fs, "enableGMG", enableGMG);
   
   cvWriteInt(fs, "enableDPAdaptiveMedianBGS", enableDPAdaptiveMedianBGS);
   cvWriteInt(fs, "enableDPGrimsonGMMBGS", enableDPGrimsonGMMBGS);
@@ -361,10 +407,14 @@ void FrameProcessor::saveConfig()
 
   cvWriteInt(fs, "enableT2FGMM_UM", enableT2FGMM_UM);
   cvWriteInt(fs, "enableT2FGMM_UV", enableT2FGMM_UV);
+  cvWriteInt(fs, "enableT2FMRF_UM", enableT2FMRF_UM);
+  cvWriteInt(fs, "enableT2FMRF_UV", enableT2FMRF_UV);
   cvWriteInt(fs, "enableFuzzySugenoIntegral", enableFuzzySugenoIntegral);
   cvWriteInt(fs, "enableFuzzyChoquetIntegral", enableFuzzyChoquetIntegral);
 
   cvWriteInt(fs, "enableMultiLayerBGS", enableMultiLayerBGS);
+
+  cvWriteInt(fs, "enablePBAS", enablePBAS);
 
   cvWriteInt(fs, "enableLBSimpleGaussian", enableLBSimpleGaussian);
   cvWriteInt(fs, "enableLBFuzzyGaussian", enableLBFuzzyGaussian);
@@ -392,6 +442,7 @@ void FrameProcessor::loadConfig()
   enableMixtureOfGaussianV1BGS = cvReadIntByName(fs, 0, "enableMixtureOfGaussianV1BGS", false);
   enableMixtureOfGaussianV2BGS = cvReadIntByName(fs, 0, "enableMixtureOfGaussianV2BGS", false);
   enableAdaptiveBackgroundLearning = cvReadIntByName(fs, 0, "enableAdaptiveBackgroundLearning", false);
+  enableGMG = cvReadIntByName(fs, 0, "enableGMG", false);
 
   enableDPAdaptiveMedianBGS = cvReadIntByName(fs, 0, "enableDPAdaptiveMedianBGS", false);
   enableDPGrimsonGMMBGS = cvReadIntByName(fs, 0, "enableDPGrimsonGMMBGS", false);
@@ -403,10 +454,14 @@ void FrameProcessor::loadConfig()
 
   enableT2FGMM_UM = cvReadIntByName(fs, 0, "enableT2FGMM_UM", false);
   enableT2FGMM_UV = cvReadIntByName(fs, 0, "enableT2FGMM_UV", false);
+  enableT2FMRF_UM = cvReadIntByName(fs, 0, "enableT2FMRF_UM", false);
+  enableT2FMRF_UV = cvReadIntByName(fs, 0, "enableT2FMRF_UV", false);
   enableFuzzySugenoIntegral = cvReadIntByName(fs, 0, "enableFuzzySugenoIntegral", false);
   enableFuzzyChoquetIntegral = cvReadIntByName(fs, 0, "enableFuzzyChoquetIntegral", false);
 
   enableMultiLayerBGS = cvReadIntByName(fs, 0, "enableMultiLayerBGS", false);
+
+  enablePBAS = cvReadIntByName(fs, 0, "enablePBAS", false);
 
   enableLBSimpleGaussian = cvReadIntByName(fs, 0, "enableLBSimpleGaussian", false);
   enableLBFuzzyGaussian = cvReadIntByName(fs, 0, "enableLBFuzzyGaussian", false);

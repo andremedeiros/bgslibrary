@@ -13,6 +13,7 @@
 #include "package_bgs/MixtureOfGaussianV1BGS.h"
 #include "package_bgs/MixtureOfGaussianV2BGS.h"
 #include "package_bgs/AdaptiveBackgroundLearning.h"
+#include "package_bgs/GMG.h"
 
 #include "package_bgs/dp/DPAdaptiveMedianBGS.h"
 #include "package_bgs/dp/DPGrimsonGMMBGS.h"
@@ -24,10 +25,14 @@
 
 #include "package_bgs/tb/T2FGMM_UM.h"
 #include "package_bgs/tb/T2FGMM_UV.h"
+#include "package_bgs/tb/T2FMRF_UM.h"
+#include "package_bgs/tb/T2FMRF_UV.h"
 #include "package_bgs/tb/FuzzySugenoIntegral.h"
 #include "package_bgs/tb/FuzzyChoquetIntegral.h"
 
 #include "package_bgs/jmo/MultiLayerBGS.h"
+
+#include "package_bgs/pt/PixelBasedAdaptiveSegmenter.h"
 
 #include "package_bgs/lb/LBSimpleGaussian.h"
 #include "package_bgs/lb/LBFuzzyGaussian.h"
@@ -78,6 +83,10 @@ private:
   AdaptiveBackgroundLearning* adaptiveBackgroundLearning;
   bool enableAdaptiveBackgroundLearning;
 
+  cv::Mat img_gmg;
+  GMG* gmg;
+  bool enableGMG;
+
   cv::Mat img_adpmed;
   DPAdaptiveMedianBGS* adaptiveMedian;
   bool enableDPAdaptiveMedianBGS;
@@ -114,6 +123,14 @@ private:
   T2FGMM_UV* type2FuzzyGMM_UV;
   bool enableT2FGMM_UV;
 
+  cv::Mat img_t2fmrf_um;
+  T2FMRF_UM* type2FuzzyMRF_UM;
+  bool enableT2FMRF_UM;
+
+  cv::Mat img_t2fmrf_uv;
+  T2FMRF_UV* type2FuzzyMRF_UV;
+  bool enableT2FMRF_UV;
+
   cv::Mat img_fsi;
   FuzzySugenoIntegral* fuzzySugenoIntegral;
   bool enableFuzzySugenoIntegral;
@@ -125,6 +142,10 @@ private:
   cv::Mat img_mlbgs;
   MultiLayerBGS* multiLayerBGS;
   bool enableMultiLayerBGS;
+
+  cv::Mat img_pt_pbas;
+  PixelBasedAdaptiveSegmenter* pixelBasedAdaptiveSegmenter;
+  bool enablePBAS;
   
   cv::Mat img_lb_sg;
   LBSimpleGaussian* lbSimpleGaussian;

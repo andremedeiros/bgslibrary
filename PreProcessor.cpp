@@ -1,6 +1,6 @@
 #include "PreProcessor.h"
 
-PreProcessor::PreProcessor() : firstTime(true), equalizeHist(false), gaussianBlur(true)
+PreProcessor::PreProcessor() : firstTime(true), equalizeHist(false), gaussianBlur(false)
 {
   std::cout << "PreProcessor()" << std::endl;
 }
@@ -34,11 +34,13 @@ void PreProcessor::process(const cv::Mat &img_input, cv::Mat &img_output)
 
   if(firstTime)
     saveConfig();
-
+  
+  img_input.copyTo(img_output);
+  
   // Converts image from one color space to another
   // http://opencv.willowgarage.com/documentation/cpp/miscellaneous_image_transformations.html#cv-cvtcolor
   cv::cvtColor(img_input, img_gray, CV_BGR2GRAY);
-  img_gray.copyTo(img_output);
+  //img_gray.copyTo(img_output);
 
   // Equalizes the histogram of a grayscale image
   // http://opencv.willowgarage.com/documentation/cpp/histograms.html#cv-equalizehist
@@ -121,7 +123,7 @@ void PreProcessor::loadConfig()
   CvFileStorage* fs = cvOpenFileStorage("./config/PreProcessor.xml", 0, CV_STORAGE_READ);
 
   equalizeHist = cvReadIntByName(fs, 0, "equalizeHist", false);
-  gaussianBlur = cvReadIntByName(fs, 0, "gaussianBlur", true);
+  gaussianBlur = cvReadIntByName(fs, 0, "gaussianBlur", false);
   enableShow = cvReadIntByName(fs, 0, "enableShow", true);
 
   cvReleaseFileStorage(&fs);

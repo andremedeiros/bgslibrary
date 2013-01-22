@@ -2,51 +2,58 @@
 
 namespace VC_ROI
 {
-IplImage* img_input1 = 0;
-IplImage* img_input2 = 0;
-int roi_x0 = 0;
-int roi_y0 = 0;
-int roi_x1 = 0;
-int roi_y1 = 0;
-int numOfRec = 0;
-int startDraw = 0;
-bool roi_defined = false;
-bool use_roi = true;
-void VideoCapture_on_mouse(int evt, int x, int y, int flag, void* param)
-{
-  if(!use_roi)
-    return;
-  //roi_defined = false;
+  IplImage* img_input1 = 0;
+  IplImage* img_input2 = 0;
+  int roi_x0 = 0;
+  int roi_y0 = 0;
+  int roi_x1 = 0;
+  int roi_y1 = 0;
+  int numOfRec = 0;
+  int startDraw = 0;
+  bool roi_defined = false;
+  bool use_roi = true;
+  bool disable_event = false;
 
-  if(evt == CV_EVENT_LBUTTONDOWN)
+  void reset(void)
   {
-    if(!startDraw)
-    {
-      //std::cout << "PASSO 1" << std::endl;
-      roi_x0 = x;
-      roi_y0 = y;
-      startDraw = 1;
-    }
-    else
-    {
-      //std::cout << "PASSO 2" << std::endl;
-      roi_x1 = x;
-      roi_y1 = y;
-      startDraw = 0;
-      roi_defined = true;
-    }
+    disable_event = false;
+    startDraw = false;
   }
 
-  if(evt == CV_EVENT_MOUSEMOVE && startDraw)
+  void VideoCapture_on_mouse(int evt, int x, int y, int flag, void* param)
   {
-    //std::cout << "PASSO 3" << std::endl;
-    //redraw ROI selection
-    img_input2 = cvCloneImage(img_input1);
-    cvRectangle(img_input2, cvPoint(roi_x0,roi_y0), cvPoint(x,y), CV_RGB(255,0,255), 1);
-    cvShowImage("Input", img_input2);
-    cvReleaseImage(&img_input2);
+    if(use_roi == false || disable_event == true)
+      return;
+    
+    if(evt == CV_EVENT_LBUTTONDOWN)
+    {
+      if(!startDraw)
+      {
+        roi_x0 = x;
+        roi_y0 = y;
+        startDraw = 1;
+      }
+      else
+      {
+        roi_x1 = x;
+        roi_y1 = y;
+        startDraw = 0;
+        roi_defined = true;
+        disable_event = true;
+      }
+    }
+
+    if(evt == CV_EVENT_MOUSEMOVE && startDraw)
+    {
+      //redraw ROI selection
+      img_input2 = cvCloneImage(img_input1);
+      cvRectangle(img_input2, cvPoint(roi_x0,roi_y0), cvPoint(x,y), CV_RGB(255,0,0), 1);
+      cvShowImage("Input", img_input2);
+      cvReleaseImage(&img_input2);
+      //startDraw = false;
+      //disable_event = true;
+    }
   }
-}
 }
 
 VideoCapture::VideoCapture() : key(0), start_time(0), delta_time(0), freq(0), fps(0), frameNumber(0), stopAt(0),
@@ -136,6 +143,8 @@ void VideoCapture::start()
     
     if(VC_ROI::use_roi == true && VC_ROI::roi_defined == false && firstTime == true)
     {
+      VC_ROI::reset();
+
       do
       {
         cv::Mat img_input(frame);
@@ -156,6 +165,7 @@ void VideoCapture::start()
         if(key == KEY_ESC)
         {
           std::cout << "ROI disabled" << std::endl;
+          VC_ROI::reset();
           VC_ROI::use_roi = false;
           break;
         }
