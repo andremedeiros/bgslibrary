@@ -9,6 +9,7 @@
 #include "package_bgs/MixtureOfGaussianV1BGS.h"
 #include "package_bgs/MixtureOfGaussianV2BGS.h"
 #include "package_bgs/AdaptiveBackgroundLearning.h"
+#include "package_bgs/GMG.h"
 
 #include "package_bgs/dp/DPAdaptiveMedianBGS.h"
 #include "package_bgs/dp/DPGrimsonGMMBGS.h"
@@ -59,6 +60,7 @@ int main(int argc, char **argv)
   //bgs = new MixtureOfGaussianV1BGS;
   //bgs = new MixtureOfGaussianV2BGS;
   //bgs = new AdaptiveBackgroundLearning;
+  //bgs = new GMG;
   
   /*** DP Package (adapted from Donovan Parks) ***/
   //bgs = new DPAdaptiveMedianBGS;
