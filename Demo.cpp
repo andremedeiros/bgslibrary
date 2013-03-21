@@ -30,6 +30,8 @@
 
 #include "package_bgs/pt/PixelBasedAdaptiveSegmenter.h"
 
+#include "package_bgs/av/VuMeter.h"
+
 #include "package_bgs/lb/LBSimpleGaussian.h"
 #include "package_bgs/lb/LBFuzzyGaussian.h"
 #include "package_bgs/lb/LBMixtureOfGaussians.h"
@@ -39,16 +41,26 @@
 int main(int argc, char **argv)
 {
   CvCapture *capture = 0;
-  capture = cvCaptureFromCAM(0); //capture = cvCaptureFromAVI("video.avi");
-  if(!capture){
-    std::cerr << "Cannot initialize webcam!" << std::endl;
+  int resize_factor = 100;
+
+  if(argc > 1)
+    capture = cvCaptureFromAVI(argv[1]);
+  else
+  {
+    capture = cvCaptureFromCAM(0);
+    resize_factor = 50; // set size = 50% of original image
+  }
+
+  if(!capture)
+  {
+    std::cerr << "Cannot initialize video!" << std::endl;
     return 1;
   }
   
-  int resize_factor = 50; // 50% of original image
   IplImage *frame_aux = cvQueryFrame(capture);
   IplImage *frame = cvCreateImage(cvSize((int)((frame_aux->width*resize_factor)/100) , (int)((frame_aux->height*resize_factor)/100)), frame_aux->depth, frame_aux->nChannels);
-  
+  cvResize(frame_aux, frame);
+
   /* Background Subtraction Methods */
   IBGS *bgs;
 
@@ -92,6 +104,9 @@ int main(int argc, char **argv)
   //bgs = new LBAdaptiveSOM;
   //bgs = new LBFuzzyAdaptiveSOM;
 
+  /*** AV Package (adapted from Antoine Vacavant) ***/
+  //bgs = new VuMeter;
+
   int key = 0;
   while(key != 'q')
   {
@@ -99,13 +114,12 @@ int main(int argc, char **argv)
     if(!frame_aux) break;
 
     cvResize(frame_aux, frame);
-
+    
     cv::Mat img_input(frame);
     cv::imshow("input", img_input);
 
-    // bgs->process(...) method internally shows the foreground mask image
     cv::Mat img_mask;
-    bgs->process(img_input, img_mask);
+    bgs->process(img_input, img_mask); // automatically shows the foreground mask image
     
     //if(!img_mask.empty())
     //  do something
