@@ -86,6 +86,9 @@ void FrameProcessor::init()
 
   if(enablePBAS)
     pixelBasedAdaptiveSegmenter = new PixelBasedAdaptiveSegmenter;
+
+  if(enableVuMeter)
+    vuMeter = new VuMeter;
   
   if(enableLBSimpleGaussian)
     lbSimpleGaussian = new LBSimpleGaussian;
@@ -200,6 +203,10 @@ void FrameProcessor::process(const cv::Mat &img_input)
   /*** PT Package (adapted from Hofmann) ***/
   if(enablePBAS)
     process("PBAS", pixelBasedAdaptiveSegmenter, img_prep, img_pt_pbas);
+  
+  /*** AV Package (adapted from Antoine Vacavant) ***/
+  if(enableVuMeter)
+    process("VuMeter", vuMeter, img_prep, img_vumeter);
 
   /*** LB Package (adapted from Laurence Bender) ***/
   if(enableLBSimpleGaussian)
@@ -245,6 +252,7 @@ void FrameProcessor::process(const cv::Mat &img_input)
     foregroundMaskAnalysis->process(frameNumber, "FuzzyChoquetIntegral", img_fci);
     foregroundMaskAnalysis->process(frameNumber, "MultiLayerBGS", img_mlbgs);
     foregroundMaskAnalysis->process(frameNumber, "PBAS", img_pt_pbas);
+    foregroundMaskAnalysis->process(frameNumber, "VuMeter", img_vumeter);
     foregroundMaskAnalysis->process(frameNumber, "LBSimpleGaussian", img_lb_sg);
     foregroundMaskAnalysis->process(frameNumber, "LBFuzzyGaussian", img_lb_fg);
     foregroundMaskAnalysis->process(frameNumber, "LBMixtureOfGaussians", img_lb_mog);
@@ -292,6 +300,9 @@ void FrameProcessor::finish(void)
 
   if(enableLBSimpleGaussian)
     delete lbSimpleGaussian;
+  
+  if(enableVuMeter)
+    delete vuMeter;
   
   if(enablePBAS)
     delete pixelBasedAdaptiveSegmenter;
@@ -416,6 +427,8 @@ void FrameProcessor::saveConfig()
 
   cvWriteInt(fs, "enablePBAS", enablePBAS);
 
+  cvWriteInt(fs, "enableVuMeter", enableVuMeter);
+
   cvWriteInt(fs, "enableLBSimpleGaussian", enableLBSimpleGaussian);
   cvWriteInt(fs, "enableLBFuzzyGaussian", enableLBFuzzyGaussian);
   cvWriteInt(fs, "enableLBMixtureOfGaussians", enableLBMixtureOfGaussians);
@@ -462,6 +475,8 @@ void FrameProcessor::loadConfig()
   enableMultiLayerBGS = cvReadIntByName(fs, 0, "enableMultiLayerBGS", false);
 
   enablePBAS = cvReadIntByName(fs, 0, "enablePBAS", false);
+
+  enableVuMeter = cvReadIntByName(fs, 0, "enableVuMeter", false);
 
   enableLBSimpleGaussian = cvReadIntByName(fs, 0, "enableLBSimpleGaussian", false);
   enableLBFuzzyGaussian = cvReadIntByName(fs, 0, "enableLBFuzzyGaussian", false);

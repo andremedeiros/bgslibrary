@@ -34,6 +34,8 @@
 
 #include "package_bgs/pt/PixelBasedAdaptiveSegmenter.h"
 
+#include "package_bgs/av/VuMeter.h"
+
 #include "package_bgs/lb/LBSimpleGaussian.h"
 #include "package_bgs/lb/LBFuzzyGaussian.h"
 #include "package_bgs/lb/LBMixtureOfGaussians.h"
@@ -146,6 +148,10 @@ private:
   cv::Mat img_pt_pbas;
   PixelBasedAdaptiveSegmenter* pixelBasedAdaptiveSegmenter;
   bool enablePBAS;
+
+  cv::Mat img_vumeter;
+  VuMeter* vuMeter;
+  bool enableVuMeter;
   
   cv::Mat img_lb_sg;
   LBSimpleGaussian* lbSimpleGaussian;

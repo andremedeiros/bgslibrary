@@ -26,6 +26,7 @@
 <enableFuzzyChoquetIntegral>0</enableFuzzyChoquetIntegral>
 <enableMultiLayerBGS>0</enableMultiLayerBGS>
 <enablePBAS>0</enablePBAS>
+<enableVuMeter>0</enableVuMeter>
 <enableLBSimpleGaussian>0</enableLBSimpleGaussian>
 <enableLBFuzzyGaussian>0</enableLBFuzzyGaussian>
 <enableLBMixtureOfGaussians>0</enableLBMixtureOfGaussians>
