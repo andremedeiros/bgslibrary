@@ -63,6 +63,9 @@ void FrameProcessor::init()
   if(enableDPEigenbackgroundBGS)
     eigenBackground = new DPEigenbackgroundBGS;
 
+  if(enableDPTextureBGS)
+    textureBGS = new DPTextureBGS;
+
   if(enableT2FGMM_UM)
     type2FuzzyGMM_UM = new T2FGMM_UM;
 
@@ -81,15 +84,6 @@ void FrameProcessor::init()
   if(enableFuzzyChoquetIntegral)
     fuzzyChoquetIntegral = new FuzzyChoquetIntegral;
   
-  if(enableMultiLayerBGS)
-    multiLayerBGS = new MultiLayerBGS;
-
-  if(enablePBAS)
-    pixelBasedAdaptiveSegmenter = new PixelBasedAdaptiveSegmenter;
-
-  if(enableVuMeter)
-    vuMeter = new VuMeter;
-  
   if(enableLBSimpleGaussian)
     lbSimpleGaussian = new LBSimpleGaussian;
 
@@ -104,6 +98,18 @@ void FrameProcessor::init()
 
   if(enableLBFuzzyAdaptiveSOM)
     lbFuzzyAdaptiveSOM = new LBFuzzyAdaptiveSOM;
+  
+  if(enableMultiLayerBGS)
+    multiLayerBGS = new MultiLayerBGS;
+
+  if(enablePBAS)
+    pixelBasedAdaptiveSegmenter = new PixelBasedAdaptiveSegmenter;
+
+  if(enableVuMeter)
+    vuMeter = new VuMeter;
+
+  if(enableKDE)
+    kde = new KDE;
 
   if(enableForegroundMaskAnalysis)
     foregroundMaskAnalysis = new ForegroundMaskAnalysis;
@@ -114,7 +120,7 @@ void FrameProcessor::process(std::string name, IBGS *bgs, const cv::Mat &img_inp
   if(tictoc == name)
     tic(name);
 
-  bgs->process(img_input, img_bgs);
+  bgs->process(img_input, img_bgs, cv::Mat());
 
   if(tictoc == name)
     toc();
@@ -151,7 +157,6 @@ void FrameProcessor::process(const cv::Mat &img_input)
   if(enableGMG)
     process("GMG", gmg, img_prep, img_gmg);
 
-  /*** DP Package (adapted from Donovan Parks) ***/
   if(enableDPAdaptiveMedianBGS)
     process("DPAdaptiveMedianBGS", adaptiveMedian, img_prep, img_adpmed);
   
@@ -172,8 +177,10 @@ void FrameProcessor::process(const cv::Mat &img_input)
   
   if(enableDPEigenbackgroundBGS)
     process("DPEigenbackgroundBGS", eigenBackground, img_prep, img_eigbkg);
+  
+  if(enableDPTextureBGS)
+    process("DPTextureBGS", textureBGS, img_prep, img_texbgs);
 
-  /*** TB Package (adapted from Thierry Bouwmans) ***/
   if(enableT2FGMM_UM)
     process("T2FGMM_UM", type2FuzzyGMM_UM, img_prep, img_t2fgmm_um);
 
@@ -192,23 +199,6 @@ void FrameProcessor::process(const cv::Mat &img_input)
   if(enableFuzzyChoquetIntegral)
     process("FuzzyChoquetIntegral", fuzzyChoquetIntegral, img_prep, img_fci);
 
-  /*** JMO Package (adapted from Jean-Marc Odobez) ***/
-  if(enableMultiLayerBGS)
-  {
-    multiLayerBGS->setStatus(MultiLayerBGS::Status::MLBGS_LEARN);
-    //multiLayerBGS->setStatus(MultiLayerBGS::Status::MLBGS_DETECT);
-    process("MultiLayerBGS", multiLayerBGS, img_prep, img_mlbgs);
-  }
-  
-  /*** PT Package (adapted from Hofmann) ***/
-  if(enablePBAS)
-    process("PBAS", pixelBasedAdaptiveSegmenter, img_prep, img_pt_pbas);
-  
-  /*** AV Package (adapted from Antoine Vacavant) ***/
-  if(enableVuMeter)
-    process("VuMeter", vuMeter, img_prep, img_vumeter);
-
-  /*** LB Package (adapted from Laurence Bender) ***/
   if(enableLBSimpleGaussian)
     process("LBSimpleGaussian", lbSimpleGaussian, img_prep, img_lb_sg);
   
@@ -223,6 +213,22 @@ void FrameProcessor::process(const cv::Mat &img_input)
 
   if(enableLBFuzzyAdaptiveSOM)
     process("LBFuzzyAdaptiveSOM", lbFuzzyAdaptiveSOM, img_prep, img_lb_fsom);
+
+  if(enableMultiLayerBGS)
+  {
+    multiLayerBGS->setStatus(MultiLayerBGS::Status::MLBGS_LEARN);
+    //multiLayerBGS->setStatus(MultiLayerBGS::Status::MLBGS_DETECT);
+    process("MultiLayerBGS", multiLayerBGS, img_prep, img_mlbgs);
+  }
+  
+  if(enablePBAS)
+    process("PBAS", pixelBasedAdaptiveSegmenter, img_prep, img_pt_pbas);
+  
+  if(enableVuMeter)
+    process("VuMeter", vuMeter, img_prep, img_vumeter);
+  
+  if(enableKDE)
+    process("KDE", kde, img_prep, img_kde);
 
   if(enableForegroundMaskAnalysis)
   {
@@ -244,20 +250,22 @@ void FrameProcessor::process(const cv::Mat &img_input)
     foregroundMaskAnalysis->process(frameNumber, "DPWrenGABGS", img_wrenga);
     foregroundMaskAnalysis->process(frameNumber, "DPPratiMediodBGS", img_pramed);
     foregroundMaskAnalysis->process(frameNumber, "DPEigenbackgroundBGS", img_eigbkg);
+    foregroundMaskAnalysis->process(frameNumber, "DPTextureBGS", img_texbgs);
     foregroundMaskAnalysis->process(frameNumber, "T2FGMM_UM", img_t2fgmm_um);
     foregroundMaskAnalysis->process(frameNumber, "T2FGMM_UV", img_t2fgmm_uv);
     foregroundMaskAnalysis->process(frameNumber, "T2FMRF_UM", img_t2fmrf_um);
     foregroundMaskAnalysis->process(frameNumber, "T2FMRF_UV", img_t2fmrf_uv);
     foregroundMaskAnalysis->process(frameNumber, "FuzzySugenoIntegral", img_fsi);
     foregroundMaskAnalysis->process(frameNumber, "FuzzyChoquetIntegral", img_fci);
-    foregroundMaskAnalysis->process(frameNumber, "MultiLayerBGS", img_mlbgs);
-    foregroundMaskAnalysis->process(frameNumber, "PBAS", img_pt_pbas);
-    foregroundMaskAnalysis->process(frameNumber, "VuMeter", img_vumeter);
     foregroundMaskAnalysis->process(frameNumber, "LBSimpleGaussian", img_lb_sg);
     foregroundMaskAnalysis->process(frameNumber, "LBFuzzyGaussian", img_lb_fg);
     foregroundMaskAnalysis->process(frameNumber, "LBMixtureOfGaussians", img_lb_mog);
     foregroundMaskAnalysis->process(frameNumber, "LBAdaptiveSOM", img_lb_som);
     foregroundMaskAnalysis->process(frameNumber, "LBFuzzyAdaptiveSOM", img_lb_fsom);
+    foregroundMaskAnalysis->process(frameNumber, "MultiLayerBGS", img_mlbgs);
+    foregroundMaskAnalysis->process(frameNumber, "PBAS", img_pt_pbas);
+    foregroundMaskAnalysis->process(frameNumber, "VuMeter", img_vumeter);
+    foregroundMaskAnalysis->process(frameNumber, "KDE", img_kde);
   }
 
   firstTime = false;
@@ -265,7 +273,7 @@ void FrameProcessor::process(const cv::Mat &img_input)
 
 void FrameProcessor::finish(void)
 {
-  if(enableMultiLayerBGS)
+  /*if(enableMultiLayerBGS)
     multiLayerBGS->finish();
 
   if(enableLBSimpleGaussian)
@@ -281,10 +289,22 @@ void FrameProcessor::finish(void)
     lbAdaptiveSOM->finish();
 
   if(enableLBFuzzyAdaptiveSOM)
-    lbFuzzyAdaptiveSOM->finish();
+    lbFuzzyAdaptiveSOM->finish();*/
   
   if(enableForegroundMaskAnalysis)
     delete foregroundMaskAnalysis;
+  
+  if(enableKDE)
+    delete kde;
+  
+  if(enableVuMeter)
+    delete vuMeter;
+  
+  if(enablePBAS)
+    delete pixelBasedAdaptiveSegmenter;
+
+  if(enableMultiLayerBGS)
+    delete multiLayerBGS;
   
   if(enableLBFuzzyAdaptiveSOM)
     delete lbFuzzyAdaptiveSOM;
@@ -300,15 +320,6 @@ void FrameProcessor::finish(void)
 
   if(enableLBSimpleGaussian)
     delete lbSimpleGaussian;
-  
-  if(enableVuMeter)
-    delete vuMeter;
-  
-  if(enablePBAS)
-    delete pixelBasedAdaptiveSegmenter;
-
-  if(enableMultiLayerBGS)
-    delete multiLayerBGS;
   
   if(enableFuzzyChoquetIntegral)
     delete fuzzyChoquetIntegral;
@@ -327,6 +338,9 @@ void FrameProcessor::finish(void)
 
   if(enableT2FGMM_UM)
     delete type2FuzzyGMM_UM;
+
+  if(enableDPTextureBGS)
+    delete textureBGS;
 
   if(enableDPEigenbackgroundBGS)
     delete eigenBackground;
@@ -415,6 +429,7 @@ void FrameProcessor::saveConfig()
   cvWriteInt(fs, "enableDPWrenGABGS", enableDPWrenGABGS);
   cvWriteInt(fs, "enableDPPratiMediodBGS", enableDPPratiMediodBGS);
   cvWriteInt(fs, "enableDPEigenbackgroundBGS", enableDPEigenbackgroundBGS);
+  cvWriteInt(fs, "enableDPTextureBGS", enableDPTextureBGS);
 
   cvWriteInt(fs, "enableT2FGMM_UM", enableT2FGMM_UM);
   cvWriteInt(fs, "enableT2FGMM_UV", enableT2FGMM_UV);
@@ -423,17 +438,16 @@ void FrameProcessor::saveConfig()
   cvWriteInt(fs, "enableFuzzySugenoIntegral", enableFuzzySugenoIntegral);
   cvWriteInt(fs, "enableFuzzyChoquetIntegral", enableFuzzyChoquetIntegral);
 
-  cvWriteInt(fs, "enableMultiLayerBGS", enableMultiLayerBGS);
-
-  cvWriteInt(fs, "enablePBAS", enablePBAS);
-
-  cvWriteInt(fs, "enableVuMeter", enableVuMeter);
-
   cvWriteInt(fs, "enableLBSimpleGaussian", enableLBSimpleGaussian);
   cvWriteInt(fs, "enableLBFuzzyGaussian", enableLBFuzzyGaussian);
   cvWriteInt(fs, "enableLBMixtureOfGaussians", enableLBMixtureOfGaussians);
   cvWriteInt(fs, "enableLBAdaptiveSOM", enableLBAdaptiveSOM);
   cvWriteInt(fs, "enableLBFuzzyAdaptiveSOM", enableLBFuzzyAdaptiveSOM);
+
+  cvWriteInt(fs, "enableMultiLayerBGS", enableMultiLayerBGS);
+  cvWriteInt(fs, "enablePBAS", enablePBAS);
+  cvWriteInt(fs, "enableVuMeter", enableVuMeter);
+  cvWriteInt(fs, "enableKDE", enableKDE);
 
   cvReleaseFileStorage(&fs);
 }
@@ -464,6 +478,7 @@ void FrameProcessor::loadConfig()
   enableDPWrenGABGS = cvReadIntByName(fs, 0, "enableDPWrenGABGS", false);
   enableDPPratiMediodBGS = cvReadIntByName(fs, 0, "enableDPPratiMediodBGS", false);
   enableDPEigenbackgroundBGS = cvReadIntByName(fs, 0, "enableDPEigenbackgroundBGS", false);
+  enableDPTextureBGS = cvReadIntByName(fs, 0, "enableDPTextureBGS", false);
 
   enableT2FGMM_UM = cvReadIntByName(fs, 0, "enableT2FGMM_UM", false);
   enableT2FGMM_UV = cvReadIntByName(fs, 0, "enableT2FGMM_UV", false);
@@ -472,17 +487,16 @@ void FrameProcessor::loadConfig()
   enableFuzzySugenoIntegral = cvReadIntByName(fs, 0, "enableFuzzySugenoIntegral", false);
   enableFuzzyChoquetIntegral = cvReadIntByName(fs, 0, "enableFuzzyChoquetIntegral", false);
 
-  enableMultiLayerBGS = cvReadIntByName(fs, 0, "enableMultiLayerBGS", false);
-
-  enablePBAS = cvReadIntByName(fs, 0, "enablePBAS", false);
-
-  enableVuMeter = cvReadIntByName(fs, 0, "enableVuMeter", false);
-
   enableLBSimpleGaussian = cvReadIntByName(fs, 0, "enableLBSimpleGaussian", false);
   enableLBFuzzyGaussian = cvReadIntByName(fs, 0, "enableLBFuzzyGaussian", false);
   enableLBMixtureOfGaussians = cvReadIntByName(fs, 0, "enableLBMixtureOfGaussians", false);
   enableLBAdaptiveSOM = cvReadIntByName(fs, 0, "enableLBAdaptiveSOM", false);
   enableLBFuzzyAdaptiveSOM = cvReadIntByName(fs, 0, "enableLBFuzzyAdaptiveSOM", false);
+
+  enableMultiLayerBGS = cvReadIntByName(fs, 0, "enableMultiLayerBGS", false);
+  enablePBAS = cvReadIntByName(fs, 0, "enablePBAS", false);
+  enableVuMeter = cvReadIntByName(fs, 0, "enableVuMeter", false);
+  enableKDE = cvReadIntByName(fs, 0, "enableKDE", false);
 
   cvReleaseFileStorage(&fs);
 }

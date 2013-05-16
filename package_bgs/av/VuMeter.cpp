@@ -14,7 +14,7 @@ VuMeter::~VuMeter()
   std::cout << "~VuMeter()" << std::endl;
 }
 
-void VuMeter::process(const cv::Mat &img_input, cv::Mat &img_output)
+void VuMeter::process(const cv::Mat &img_input, cv::Mat &img_output, cv::Mat &img_bgmodel)
 {
   if(img_input.empty())
     return;
@@ -63,6 +63,8 @@ void VuMeter::process(const cv::Mat &img_input, cv::Mat &img_output)
   }
 
   img_foreground.copyTo(img_output);
+  img_bkg.copyTo(img_bgmodel);
+  
   delete frame;
   firstTime = false;
 }
