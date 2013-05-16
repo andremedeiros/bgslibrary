@@ -18,6 +18,7 @@
 #include "package_bgs/dp/DPWrenGABGS.h"
 #include "package_bgs/dp/DPPratiMediodBGS.h"
 #include "package_bgs/dp/DPEigenbackgroundBGS.h"
+#include "package_bgs/dp/DPTextureBGS.h"
 
 #include "package_bgs/tb/T2FGMM_UM.h"
 #include "package_bgs/tb/T2FGMM_UV.h"
@@ -26,17 +27,16 @@
 #include "package_bgs/tb/FuzzySugenoIntegral.h"
 #include "package_bgs/tb/FuzzyChoquetIntegral.h"
 
-#include "package_bgs/jmo/MultiLayerBGS.h"
-
-#include "package_bgs/pt/PixelBasedAdaptiveSegmenter.h"
-
-#include "package_bgs/av/VuMeter.h"
-
 #include "package_bgs/lb/LBSimpleGaussian.h"
 #include "package_bgs/lb/LBFuzzyGaussian.h"
 #include "package_bgs/lb/LBMixtureOfGaussians.h"
 #include "package_bgs/lb/LBAdaptiveSOM.h"
 #include "package_bgs/lb/LBFuzzyAdaptiveSOM.h"
+
+#include "package_bgs/jmo/MultiLayerBGS.h"
+#include "package_bgs/pt/PixelBasedAdaptiveSegmenter.h"
+#include "package_bgs/av/VuMeter.h"
+#include "package_bgs/ae/KDE.h"
 
 int main(int argc, char **argv)
 {
@@ -82,6 +82,7 @@ int main(int argc, char **argv)
   //bgs = new DPWrenGABGS;
   //bgs = new DPPratiMediodBGS;
   //bgs = new DPEigenbackgroundBGS;
+  //bgs = new DPTextureBGS;
 
   /*** TB Package (adapted from Thierry Bouwmans) ***/
   //bgs = new T2FGMM_UM;
@@ -107,6 +108,9 @@ int main(int argc, char **argv)
   /*** AV Package (adapted from Antoine Vacavant) ***/
   //bgs = new VuMeter;
 
+  /*** EG Package (adapted from Ahmed Elgammal) ***/
+  //bgs = new KDE;
+
   int key = 0;
   while(key != 'q')
   {
@@ -119,7 +123,8 @@ int main(int argc, char **argv)
     cv::imshow("input", img_input);
 
     cv::Mat img_mask;
-    bgs->process(img_input, img_mask); // automatically shows the foreground mask image
+    cv::Mat img_bkgmodel;
+    bgs->process(img_input, img_mask, img_bkgmodel); // automatically shows the foreground mask image
     
     //if(!img_mask.empty())
     //  do something
