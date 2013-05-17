@@ -120,7 +120,8 @@ void FrameProcessor::process(std::string name, IBGS *bgs, const cv::Mat &img_inp
   if(tictoc == name)
     tic(name);
 
-  bgs->process(img_input, img_bgs, cv::Mat());
+  cv::Mat img_bkgmodel;
+  bgs->process(img_input, img_bgs, img_bkgmodel);
 
   if(tictoc == name)
     toc();

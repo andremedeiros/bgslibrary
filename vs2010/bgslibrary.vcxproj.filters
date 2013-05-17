@@ -31,6 +31,12 @@
     <Filter Include="Header Files\package_bgs\tb">
       <UniqueIdentifier>{781e472a-2256-437a-ae26-8611653f8882}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\package_bgs\ae">
+      <UniqueIdentifier>{ec53c3c1-ec12-4d06-a330-dcc626d220f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\package_bgs\av">
+      <UniqueIdentifier>{5c8f2d51-2d62-4d20-a7bb-b18a28688acd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Demo.cpp">
@@ -59,51 +65,6 @@
     </ClCompile>
     <ClCompile Include="..\package_bgs\WeightedMovingVarianceBGS.cpp">
       <Filter>Header Files\package_bgs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\package_bgs\dp\AdaptiveMedianBGS.cpp">
-      <Filter>Header Files\package_bgs\dp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\package_bgs\dp\DPAdaptiveMedianBGS.cpp">
-      <Filter>Header Files\package_bgs\dp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\package_bgs\dp\DPEigenbackgroundBGS.cpp">
-      <Filter>Header Files\package_bgs\dp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\package_bgs\dp\DPGrimsonGMMBGS.cpp">
-      <Filter>Header Files\package_bgs\dp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\package_bgs\dp\DPMeanBGS.cpp">
-      <Filter>Header Files\package_bgs\dp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\package_bgs\dp\DPPratiMediodBGS.cpp">
-      <Filter>Header Files\package_bgs\dp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\package_bgs\dp\DPWrenGABGS.cpp">
-      <Filter>Header Files\package_bgs\dp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\package_bgs\dp\DPZivkovicAGMMBGS.cpp">
-      <Filter>Header Files\package_bgs\dp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\package_bgs\dp\Eigenbackground.cpp">
-      <Filter>Header Files\package_bgs\dp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\package_bgs\dp\GrimsonGMM.cpp">
-      <Filter>Header Files\package_bgs\dp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\package_bgs\dp\Image.cpp">
-      <Filter>Header Files\package_bgs\dp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\package_bgs\dp\MeanBGS.cpp">
-      <Filter>Header Files\package_bgs\dp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\package_bgs\dp\PratiMediodBGS.cpp">
-      <Filter>Header Files\package_bgs\dp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\package_bgs\dp\WrenGA.cpp">
-      <Filter>Header Files\package_bgs\dp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\package_bgs\dp\ZivkovicAGMM.cpp">
-      <Filter>Header Files\package_bgs\dp</Filter>
     </ClCompile>
     <ClCompile Include="..\package_bgs\jmo\blob.cpp">
       <Filter>Header Files\package_bgs\jmo</Filter>
@@ -180,6 +141,93 @@
     <ClCompile Include="..\package_bgs\tb\T2FGMM_UV.cpp">
       <Filter>Header Files\package_bgs\tb</Filter>
     </ClCompile>
+    <ClCompile Include="..\package_bgs\ae\KDE.cpp">
+      <Filter>Header Files\package_bgs\ae</Filter>
+    </ClCompile>
+    <ClCompile Include="..\package_bgs\ae\KernelTable.cpp">
+      <Filter>Header Files\package_bgs\ae</Filter>
+    </ClCompile>
+    <ClCompile Include="..\package_bgs\ae\NPBGmodel.cpp">
+      <Filter>Header Files\package_bgs\ae</Filter>
+    </ClCompile>
+    <ClCompile Include="..\package_bgs\ae\NPBGSubtractor.cpp">
+      <Filter>Header Files\package_bgs\ae</Filter>
+    </ClCompile>
+    <ClCompile Include="..\package_bgs\av\TBackground.cpp">
+      <Filter>Header Files\package_bgs\av</Filter>
+    </ClCompile>
+    <ClCompile Include="..\package_bgs\av\TBackgroundVuMeter.cpp">
+      <Filter>Header Files\package_bgs\av</Filter>
+    </ClCompile>
+    <ClCompile Include="..\package_bgs\av\VuMeter.cpp">
+      <Filter>Header Files\package_bgs\av</Filter>
+    </ClCompile>
+    <ClCompile Include="..\package_bgs\dp\AdaptiveMedianBGS.cpp">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\package_bgs\dp\Blob.cpp">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\package_bgs\dp\BlobExtraction.cpp">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\package_bgs\dp\BlobResult.cpp">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\package_bgs\dp\ConnectedComponents.cpp">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\package_bgs\dp\DPAdaptiveMedianBGS.cpp">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\package_bgs\dp\DPEigenbackgroundBGS.cpp">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\package_bgs\dp\DPGrimsonGMMBGS.cpp">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\package_bgs\dp\DPMeanBGS.cpp">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\package_bgs\dp\DPPratiMediodBGS.cpp">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\package_bgs\dp\DPTextureBGS.cpp">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\package_bgs\dp\DPWrenGABGS.cpp">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\package_bgs\dp\DPZivkovicAGMMBGS.cpp">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\package_bgs\dp\Eigenbackground.cpp">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\package_bgs\dp\Error.cpp">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\package_bgs\dp\GrimsonGMM.cpp">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\package_bgs\dp\Image.cpp">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\package_bgs\dp\MeanBGS.cpp">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\package_bgs\dp\PratiMediodBGS.cpp">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\package_bgs\dp\TextureBGS.cpp">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\package_bgs\dp\WrenGA.cpp">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\package_bgs\dp\ZivkovicAGMM.cpp">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\package_analysis\ForegroundMaskAnalysis.h">
@@ -208,57 +256,6 @@
     </ClInclude>
     <ClInclude Include="..\package_bgs\WeightedMovingVarianceBGS.h">
       <Filter>Header Files\package_bgs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\package_bgs\dp\AdaptiveMedianBGS.h">
-      <Filter>Header Files\package_bgs\dp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\package_bgs\dp\Bgs.h">
-      <Filter>Header Files\package_bgs\dp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\package_bgs\dp\BgsParams.h">
-      <Filter>Header Files\package_bgs\dp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\package_bgs\dp\DPAdaptiveMedianBGS.h">
-      <Filter>Header Files\package_bgs\dp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\package_bgs\dp\DPEigenbackgroundBGS.h">
-      <Filter>Header Files\package_bgs\dp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\package_bgs\dp\DPGrimsonGMMBGS.h">
-      <Filter>Header Files\package_bgs\dp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\package_bgs\dp\DPMeanBGS.h">
-      <Filter>Header Files\package_bgs\dp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\package_bgs\dp\DPPratiMediodBGS.h">
-      <Filter>Header Files\package_bgs\dp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\package_bgs\dp\DPWrenGABGS.h">
-      <Filter>Header Files\package_bgs\dp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\package_bgs\dp\DPZivkovicAGMMBGS.h">
-      <Filter>Header Files\package_bgs\dp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\package_bgs\dp\Eigenbackground.h">
-      <Filter>Header Files\package_bgs\dp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\package_bgs\dp\GrimsonGMM.h">
-      <Filter>Header Files\package_bgs\dp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\package_bgs\dp\Image.h">
-      <Filter>Header Files\package_bgs\dp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\package_bgs\dp\MeanBGS.h">
-      <Filter>Header Files\package_bgs\dp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\package_bgs\dp\PratiMediodBGS.h">
-      <Filter>Header Files\package_bgs\dp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\package_bgs\dp\WrenGA.h">
-      <Filter>Header Files\package_bgs\dp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\package_bgs\dp\ZivkovicAGMM.h">
-      <Filter>Header Files\package_bgs\dp</Filter>
     </ClInclude>
     <ClInclude Include="..\package_bgs\jmo\BackgroundSubtractionAPI.h">
       <Filter>Header Files\package_bgs\jmo</Filter>
@@ -349,6 +346,99 @@
     </ClInclude>
     <ClInclude Include="..\package_bgs\tb\T2FGMM_UV.h">
       <Filter>Header Files\package_bgs\tb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\package_bgs\ae\KDE.h">
+      <Filter>Header Files\package_bgs\ae</Filter>
+    </ClInclude>
+    <ClInclude Include="..\package_bgs\ae\KernelTable.h">
+      <Filter>Header Files\package_bgs\ae</Filter>
+    </ClInclude>
+    <ClInclude Include="..\package_bgs\ae\NPBGmodel.h">
+      <Filter>Header Files\package_bgs\ae</Filter>
+    </ClInclude>
+    <ClInclude Include="..\package_bgs\ae\NPBGSubtractor.h">
+      <Filter>Header Files\package_bgs\ae</Filter>
+    </ClInclude>
+    <ClInclude Include="..\package_bgs\av\TBackground.h">
+      <Filter>Header Files\package_bgs\av</Filter>
+    </ClInclude>
+    <ClInclude Include="..\package_bgs\av\TBackgroundVuMeter.h">
+      <Filter>Header Files\package_bgs\av</Filter>
+    </ClInclude>
+    <ClInclude Include="..\package_bgs\av\VuMeter.h">
+      <Filter>Header Files\package_bgs\av</Filter>
+    </ClInclude>
+    <ClInclude Include="..\package_bgs\dp\AdaptiveMedianBGS.h">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\package_bgs\dp\Bgs.h">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\package_bgs\dp\BgsParams.h">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\package_bgs\dp\Blob.h">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\package_bgs\dp\BlobExtraction.h">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\package_bgs\dp\BlobResult.h">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\package_bgs\dp\ConnectedComponents.h">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\package_bgs\dp\DPAdaptiveMedianBGS.h">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\package_bgs\dp\DPEigenbackgroundBGS.h">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\package_bgs\dp\DPGrimsonGMMBGS.h">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\package_bgs\dp\DPMeanBGS.h">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\package_bgs\dp\DPPratiMediodBGS.h">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\package_bgs\dp\DPTextureBGS.h">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\package_bgs\dp\DPWrenGABGS.h">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\package_bgs\dp\DPZivkovicAGMMBGS.h">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\package_bgs\dp\Eigenbackground.h">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\package_bgs\dp\Error.h">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\package_bgs\dp\GrimsonGMM.h">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\package_bgs\dp\Image.h">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\package_bgs\dp\MeanBGS.h">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\package_bgs\dp\PratiMediodBGS.h">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\package_bgs\dp\TextureBGS.h">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\package_bgs\dp\WrenGA.h">
+      <Filter>Header Files\package_bgs\dp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\package_bgs\dp\ZivkovicAGMM.h">
+      <Filter>Header Files\package_bgs\dp</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

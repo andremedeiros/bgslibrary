@@ -66,33 +66,48 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\OpenCV2.4.3\build\include;C:\OpenCV2.4.3\build\include\opencv;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\OpenCV2.4.5\build\include;C:\OpenCV2.4.5\build\include\opencv;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>C:\OpenCV2.4.3\build\x86\vc10\lib\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>C:\OpenCV2.4.5\build\x86\vc10\staticlib\*.lib;comctl32.lib;VFW32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Demo.cpp" />
     <ClCompile Include="..\package_analysis\ForegroundMaskAnalysis.cpp" />
     <ClCompile Include="..\package_bgs\AdaptiveBackgroundLearning.cpp" />
+    <ClCompile Include="..\package_bgs\ae\KDE.cpp" />
+    <ClCompile Include="..\package_bgs\ae\KernelTable.cpp" />
+    <ClCompile Include="..\package_bgs\ae\NPBGmodel.cpp" />
+    <ClCompile Include="..\package_bgs\ae\NPBGSubtractor.cpp" />
+    <ClCompile Include="..\package_bgs\av\TBackground.cpp" />
+    <ClCompile Include="..\package_bgs\av\TBackgroundVuMeter.cpp" />
+    <ClCompile Include="..\package_bgs\av\VuMeter.cpp" />
     <ClCompile Include="..\package_bgs\dp\AdaptiveMedianBGS.cpp" />
+    <ClCompile Include="..\package_bgs\dp\Blob.cpp" />
+    <ClCompile Include="..\package_bgs\dp\BlobExtraction.cpp" />
+    <ClCompile Include="..\package_bgs\dp\BlobResult.cpp" />
+    <ClCompile Include="..\package_bgs\dp\ConnectedComponents.cpp" />
     <ClCompile Include="..\package_bgs\dp\DPAdaptiveMedianBGS.cpp" />
     <ClCompile Include="..\package_bgs\dp\DPEigenbackgroundBGS.cpp" />
     <ClCompile Include="..\package_bgs\dp\DPGrimsonGMMBGS.cpp" />
     <ClCompile Include="..\package_bgs\dp\DPMeanBGS.cpp" />
     <ClCompile Include="..\package_bgs\dp\DPPratiMediodBGS.cpp" />
+    <ClCompile Include="..\package_bgs\dp\DPTextureBGS.cpp" />
     <ClCompile Include="..\package_bgs\dp\DPWrenGABGS.cpp" />
     <ClCompile Include="..\package_bgs\dp\DPZivkovicAGMMBGS.cpp" />
     <ClCompile Include="..\package_bgs\dp\Eigenbackground.cpp" />
+    <ClCompile Include="..\package_bgs\dp\Error.cpp" />
     <ClCompile Include="..\package_bgs\dp\GrimsonGMM.cpp" />
     <ClCompile Include="..\package_bgs\dp\Image.cpp" />
     <ClCompile Include="..\package_bgs\dp\MeanBGS.cpp" />
     <ClCompile Include="..\package_bgs\dp\PratiMediodBGS.cpp" />
+    <ClCompile Include="..\package_bgs\dp\TextureBGS.cpp" />
     <ClCompile Include="..\package_bgs\dp\WrenGA.cpp" />
     <ClCompile Include="..\package_bgs\dp\ZivkovicAGMM.cpp" />
     <ClCompile Include="..\package_bgs\FrameDifferenceBGS.cpp" />
@@ -130,21 +145,35 @@
   <ItemGroup>
     <ClInclude Include="..\package_analysis\ForegroundMaskAnalysis.h" />
     <ClInclude Include="..\package_bgs\AdaptiveBackgroundLearning.h" />
+    <ClInclude Include="..\package_bgs\ae\KDE.h" />
+    <ClInclude Include="..\package_bgs\ae\KernelTable.h" />
+    <ClInclude Include="..\package_bgs\ae\NPBGmodel.h" />
+    <ClInclude Include="..\package_bgs\ae\NPBGSubtractor.h" />
+    <ClInclude Include="..\package_bgs\av\TBackground.h" />
+    <ClInclude Include="..\package_bgs\av\TBackgroundVuMeter.h" />
+    <ClInclude Include="..\package_bgs\av\VuMeter.h" />
     <ClInclude Include="..\package_bgs\dp\AdaptiveMedianBGS.h" />
     <ClInclude Include="..\package_bgs\dp\Bgs.h" />
     <ClInclude Include="..\package_bgs\dp\BgsParams.h" />
+    <ClInclude Include="..\package_bgs\dp\Blob.h" />
+    <ClInclude Include="..\package_bgs\dp\BlobExtraction.h" />
+    <ClInclude Include="..\package_bgs\dp\BlobResult.h" />
+    <ClInclude Include="..\package_bgs\dp\ConnectedComponents.h" />
     <ClInclude Include="..\package_bgs\dp\DPAdaptiveMedianBGS.h" />
     <ClInclude Include="..\package_bgs\dp\DPEigenbackgroundBGS.h" />
     <ClInclude Include="..\package_bgs\dp\DPGrimsonGMMBGS.h" />
     <ClInclude Include="..\package_bgs\dp\DPMeanBGS.h" />
     <ClInclude Include="..\package_bgs\dp\DPPratiMediodBGS.h" />
+    <ClInclude Include="..\package_bgs\dp\DPTextureBGS.h" />
     <ClInclude Include="..\package_bgs\dp\DPWrenGABGS.h" />
     <ClInclude Include="..\package_bgs\dp\DPZivkovicAGMMBGS.h" />
     <ClInclude Include="..\package_bgs\dp\Eigenbackground.h" />
+    <ClInclude Include="..\package_bgs\dp\Error.h" />
     <ClInclude Include="..\package_bgs\dp\GrimsonGMM.h" />
     <ClInclude Include="..\package_bgs\dp\Image.h" />
     <ClInclude Include="..\package_bgs\dp\MeanBGS.h" />
     <ClInclude Include="..\package_bgs\dp\PratiMediodBGS.h" />
+    <ClInclude Include="..\package_bgs\dp\TextureBGS.h" />
     <ClInclude Include="..\package_bgs\dp\WrenGA.h" />
     <ClInclude Include="..\package_bgs\dp\ZivkovicAGMM.h" />
     <ClInclude Include="..\package_bgs\FrameDifferenceBGS.h" />
