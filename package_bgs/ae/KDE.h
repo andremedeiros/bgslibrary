@@ -21,7 +21,7 @@ along with BGSLibrary.  If not, see <http://www.gnu.org/licenses/>.
 #include <highgui.h>
 
 #include "NPBGSubtractor.h"
-#include "..\IBGS.h"
+#include "../IBGS.h"
 
 class KDE : public IBGS
 {
