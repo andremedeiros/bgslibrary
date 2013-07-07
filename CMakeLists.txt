@@ -22,7 +22,7 @@ file(GLOB_RECURSE bgs package_bgs/*.cpp)
 file(GLOB_RECURSE bgs_include package_bgs/*.h)
 
 # GMG is not available in older OpenCV versions
-if(${OpenCV_VERSION} VERSION_LESS 2.4.1)
+if(${OpenCV_VERSION} VERSION_LESS 2.4.3)
   file(GLOB gmg package_bgs/GMG.cpp)
   list(REMOVE_ITEM bgs ${gmg})
 endif()
