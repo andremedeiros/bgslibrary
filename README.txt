@@ -10,6 +10,7 @@ cmake ..
 make
 cd ..
 
-chmod +x use_video.sh use_camera.sh
-./use_video.sh
-./use_camera.sh
+chmod +x run_video.sh run_camera.sh run_demo.sh
+./run_video.sh
+./run_camera.sh
+./run_demo.sh
