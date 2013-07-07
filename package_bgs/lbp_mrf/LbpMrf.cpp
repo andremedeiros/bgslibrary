@@ -44,10 +44,8 @@ void LbpMrf::process(const cv::Mat &img_input, cv::Mat &img_output, cv::Mat &img
   loadConfig();
 
   if(firstTime)
-  {
     saveConfig();
-  }
-
+  
   IplImage TempImage(img_input);
   MEImage InputImage(img_input.cols, img_input.rows, img_input.channels());
   MEImage OutputImage(img_input.cols, img_input.rows, img_input.channels());
@@ -64,6 +62,7 @@ void LbpMrf::process(const cv::Mat &img_input, cv::Mat &img_output, cv::Mat &img
     cv::imshow("LbpMrf (LBP-MRF)", img_output);
     cv::imshow("LbpMrf BKG (LBP-MRF)", img_bgmodel);
   }
+
   firstTime = false;
 }
 

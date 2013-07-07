@@ -81,7 +81,7 @@ public:
 	Graph(void (*err_function)(char *) = NULL);
 
 	/* Destructor */
-	~Graph();
+	virtual ~Graph(void);
 
 	/* Adds a node to the graph */
 	node_id add_node();
