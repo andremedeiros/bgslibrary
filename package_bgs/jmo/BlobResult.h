@@ -107,6 +107,9 @@ MODIFICATIONS (Modification, Author, Date):
 #define EXCEPTION_BLOB_OUT_OF_BOUNDS	1000
 #define EXCEPCIO_CALCUL_BLOBS			1001
 
+namespace Blob
+{
+
 //! definició de que es un vector de blobs
 typedef std::vector<CBlob*>	blob_vector;
 
@@ -203,6 +206,8 @@ protected:
 	//! Vector with all the blobs
 	blob_vector		m_blobs;
 };
+
+}
 
 #endif // !defined(_CLASSE_BLOBRESULT_INCLUDED)
 

@@ -71,6 +71,9 @@ along with BGSLibrary.  If not, see <http://www.gnu.org/licenses/>.
 #include "BlobResult.h"
 #include "BlobExtraction.h"
 
+namespace Blob
+{
+
 /**
 - FUNCIÓ: BlobAnalysis
 - FUNCIONALITAT: Extreu els blobs d'una imatge d'un sol canal
@@ -1482,4 +1485,6 @@ double GetExternPerimeter( int start, int end, int row, int width, int height, I
   }
 
   return perimeter;
+}
+
 }

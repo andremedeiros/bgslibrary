@@ -116,7 +116,10 @@ void FrameProcessor::init()
 
   if(enableLBFuzzyAdaptiveSOM)
     lbFuzzyAdaptiveSOM = new LBFuzzyAdaptiveSOM;
-  
+
+  if(enableLbpMrf)
+    lbpMrf = new LbpMrf;
+
   if(enableMultiLayerBGS)
     multiLayerBGS = new MultiLayerBGS;
 
@@ -235,6 +238,9 @@ void FrameProcessor::process(const cv::Mat &img_input)
   if(enableLBFuzzyAdaptiveSOM)
     process("LBFuzzyAdaptiveSOM", lbFuzzyAdaptiveSOM, img_prep, img_lb_fsom);
 
+  if(enableLbpMrf)
+    process("LbpMrf", lbpMrf, img_prep, img_lbp_mrf);
+
   if(enableMultiLayerBGS)
   {
     multiLayerBGS->setStatus(MultiLayerBGS::Status::MLBGS_LEARN);
@@ -285,6 +291,7 @@ void FrameProcessor::process(const cv::Mat &img_input)
     foregroundMaskAnalysis->process(frameNumber, "LBMixtureOfGaussians", img_lb_mog);
     foregroundMaskAnalysis->process(frameNumber, "LBAdaptiveSOM", img_lb_som);
     foregroundMaskAnalysis->process(frameNumber, "LBFuzzyAdaptiveSOM", img_lb_fsom);
+    foregroundMaskAnalysis->process(frameNumber, "LbpMrf", img_lbp_mrf);
     foregroundMaskAnalysis->process(frameNumber, "MultiLayerBGS", img_mlbgs);
     foregroundMaskAnalysis->process(frameNumber, "PBAS", img_pt_pbas);
     foregroundMaskAnalysis->process(frameNumber, "VuMeter", img_vumeter);
@@ -343,7 +350,10 @@ void FrameProcessor::finish(void)
 
   if(enableLBSimpleGaussian)
     delete lbSimpleGaussian;
-  
+
+  if(enableLbpMrf)
+    delete lbpMrf;
+
   if(enableFuzzyChoquetIntegral)
     delete fuzzyChoquetIntegral;
 
@@ -471,6 +481,8 @@ void FrameProcessor::saveConfig()
   cvWriteInt(fs, "enableLBAdaptiveSOM", enableLBAdaptiveSOM);
   cvWriteInt(fs, "enableLBFuzzyAdaptiveSOM", enableLBFuzzyAdaptiveSOM);
 
+  cvWriteInt(fs, "enableLbpMrf", enableLbpMrf);
+
   cvWriteInt(fs, "enableMultiLayerBGS", enableMultiLayerBGS);
   cvWriteInt(fs, "enablePBAS", enablePBAS);
   cvWriteInt(fs, "enableVuMeter", enableVuMeter);
@@ -521,6 +533,8 @@ void FrameProcessor::loadConfig()
   enableLBMixtureOfGaussians = cvReadIntByName(fs, 0, "enableLBMixtureOfGaussians", false);
   enableLBAdaptiveSOM = cvReadIntByName(fs, 0, "enableLBAdaptiveSOM", false);
   enableLBFuzzyAdaptiveSOM = cvReadIntByName(fs, 0, "enableLBFuzzyAdaptiveSOM", false);
+
+  enableLbpMrf = cvReadIntByName(fs, 0, "enableLbpMrf", false);
 
   enableMultiLayerBGS = cvReadIntByName(fs, 0, "enableMultiLayerBGS", false);
   enablePBAS = cvReadIntByName(fs, 0, "enablePBAS", false);

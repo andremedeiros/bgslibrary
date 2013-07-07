@@ -60,6 +60,9 @@ MODIFICATIONS (Modification, Author, Date):
 #include "blob.h"
 #include "cv.h"
 
+namespace Blob
+{
+
 /**
 - FUNCIÓ: CBlob
 - FUNCIONALITAT: Constructor estàndard 
@@ -1141,3 +1144,6 @@ void RegistraTotsOperadors( t_OperadorBlobFactory &fabricaOperadorsBlob )
 }
 
 #endif
+
+}
+

@@ -3,7 +3,7 @@
 <tictoc>""</tictoc>
 <enablePreProcessor>1</enablePreProcessor>
 <enableForegroundMaskAnalysis>0</enableForegroundMaskAnalysis>
-<enableFrameDifferenceBGS>0</enableFrameDifferenceBGS>
+<enableFrameDifferenceBGS>1</enableFrameDifferenceBGS>
 <enableStaticFrameDifferenceBGS>0</enableStaticFrameDifferenceBGS>
 <enableWeightedMovingMeanBGS>0</enableWeightedMovingMeanBGS>
 <enableWeightedMovingVarianceBGS>0</enableWeightedMovingVarianceBGS>
@@ -30,6 +30,7 @@
 <enableLBMixtureOfGaussians>0</enableLBMixtureOfGaussians>
 <enableLBAdaptiveSOM>0</enableLBAdaptiveSOM>
 <enableLBFuzzyAdaptiveSOM>0</enableLBFuzzyAdaptiveSOM>
+<enableLbpMrf>0</enableLbpMrf>
 <enableMultiLayerBGS>0</enableMultiLayerBGS>
 <enablePBAS>0</enablePBAS>
 <enableVuMeter>0</enableVuMeter>

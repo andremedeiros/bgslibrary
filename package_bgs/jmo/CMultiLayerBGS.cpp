@@ -54,6 +54,8 @@ along with BGSLibrary.  If not, see <http://www.gnu.org/licenses/>.
 #include <cmath>						// math includes
 #include <iostream>                                             // I/O streams
 
+using namespace Blob;
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
