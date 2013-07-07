@@ -55,7 +55,9 @@ along with BGSLibrary.  If not, see <http://www.gnu.org/licenses/>.
 #include "package_bgs/lb/LBAdaptiveSOM.h"
 #include "package_bgs/lb/LBFuzzyAdaptiveSOM.h"
 
+#if !defined(_WIN32)
 #include "package_bgs/lbp_mrf/LbpMrf.h"
+#endif
 
 #include "package_bgs/jmo/MultiLayerBGS.h"
 #include "package_bgs/pt/PixelBasedAdaptiveSegmenter.h"
@@ -187,9 +189,11 @@ private:
   LBFuzzyAdaptiveSOM* lbFuzzyAdaptiveSOM;
   bool enableLBFuzzyAdaptiveSOM;
 
+  #if !defined(_WIN32)
   cv::Mat img_lbp_mrf;
   LbpMrf* lbpMrf;
   bool enableLbpMrf;
+  #endif
   
   cv::Mat img_mlbgs;
   MultiLayerBGS* multiLayerBGS;
