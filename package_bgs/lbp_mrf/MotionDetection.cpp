@@ -193,9 +193,6 @@ void MotionDetection::SetParameter(ParametersType param, float value)
       break;
 
     case mdp_HUHistogramsPerPixel:
-      //int *ptr1;
-      //ptr1 = const_cast<int*>(&HUHistogramsPerPixel);
-      //*ptr1 = (MDDataState == ps_Uninitialized) ? (int)value : HUHistogramsPerPixel;
       HUHistogramsPerPixel = (MDDataState == ps_Uninitialized) ? (int)value : HUHistogramsPerPixel;
       break;
 
@@ -204,9 +201,6 @@ void MotionDetection::SetParameter(ParametersType param, float value)
       break;
 
     case mdp_HUHistogramBins:
-      //int *ptr2;
-      //ptr2 = const_cast<int*>(&HUHistogramBins);
-      //*ptr2 = (MDDataState == ps_Uninitialized) ? (int)value : HUHistogramBins;
       HUHistogramBins = (MDDataState == ps_Uninitialized) ? (int)value : HUHistogramBins;
       break;
 
@@ -349,14 +343,7 @@ void MotionDetection::InitHUData(int imagewidth, int imageheight)
 
     MDDataState = ps_Initialized;
 
-    //int *ptr1;
-    //ptr1 = const_cast<int*>(&HUImageWidth);
-    //*ptr1 = imagewidth-HUHistogramArea+1;
     HUImageWidth = imagewidth-HUHistogramArea+1;
-    
-    //int *ptr2;
-    //ptr2 = const_cast<int*>(&HUImageHeight);
-    //*ptr2 = imageheight-HUHistogramArea+1;
     HUImageHeight = imageheight-HUHistogramArea+1;
 
     HULBPPixelData = new MEPixelDataType**[HUImageWidth / 2];
@@ -442,16 +429,8 @@ void MotionDetection::ReleaseHUData()
     if (MDMode == md_DLBPHistograms)
       ReleaseHUOFData();
 
-    //int *ptr1;
-    //ptr1 = const_cast<int*>(&HUImageWidth);
-    //*ptr1 = -1;
     HUImageWidth = -1;
-    
-    //int *ptr2;
-    //ptr2 = const_cast<int*>(&HUImageHeight);
-    //*ptr2 = -1;
     HUImageHeight = -1;
-
     HULBPPixelData = NULL;
     MDDataState = ps_Uninitialized;
 
@@ -600,7 +579,7 @@ void MotionDetection::DetectMotionsHU(MEImage& image)
 
   // Set some auxiliary variables
   ImgData = newimage.GetImageData();
-  int DivisionOperator = (int)(std::log((double)(256 / HUHistogramBins)) / std::log((double)2))+1;
+  int DivisionOperator = (int)(log(256 / HUHistogramBins) / log(2))+1;
 
   // Downscale the image
   for (int i = newimage.GetRowWidth()*newimage.GetHeight()-1; i >= 0; --i)
@@ -622,14 +601,7 @@ void MotionDetection::DetectMotionsHU(MEImage& image)
 
 void MotionDetection::UpdateModelHU(MEImage& image, MEPixelDataType*** model)
 {
-  const int bins = 8;
-  int *ptr;
-  ptr = const_cast<int*>(&bins);
-  *ptr = HUHistogramBins;
-  
-  //float CurrentHistogram[HUHistogramBins], CurrentHistogram2[HUHistogramBins];
-  float CurrentHistogram[bins], CurrentHistogram2[bins];
-
+  float CurrentHistogram[HUHistogramBins], CurrentHistogram2[HUHistogramBins];
   unsigned char *ImgData = image.GetImageData();
   int RowWidth = image.GetRowWidth();
   int RowStart = (HUImageHeight-1)*RowWidth;
@@ -827,14 +799,7 @@ void MotionDetection::UpdateHUPixelData(MEPixelDataType* PixelData, const float 
   int MaxIndex = 0;
   float MaxValue = -1;
   bool Replace = true;
-
-  const int bins = 3;
-  int *ptr;
-  ptr = const_cast<int*>(&bins);
-  *ptr = HUHistogramsPerPixel;
-
-  //float IntersectionResults[HUHistogramsPerPixel];
-  float IntersectionResults[bins];
+  float IntersectionResults[HUHistogramsPerPixel];
 
   PixelData->LifeCycle++;
   PixelData->BackgroundRate = 0.0;
@@ -928,13 +893,7 @@ void MotionDetection::UpdateHUPixelData(MEPixelDataType* PixelData, const float 
   }
 
   // Order and select the background histograms
-  const int var2 = 3;
-  int *ptr2;
-  ptr2 = const_cast<int*>(&var2);
-  *ptr2 = HUHistogramsPerPixel;
-
-  //float Weights[HUHistogramsPerPixel][2];
-  float Weights[var2][2];
+  float Weights[HUHistogramsPerPixel][2];
 
   for (int i = HUHistogramsPerPixel-1; i >= 0; --i)
   {
@@ -1038,14 +997,7 @@ void MotionDetection::OpticalFlowCorrection()
                          cvTermCriteria(CV_TERMCRIT_ITER|CV_TERMCRIT_EPS, 5, 1), 0);
 
   // Count the distances of the tracked points
-  const int var = 1;
-  int *ptr;
-  ptr = const_cast<int*>(&var);
-  *ptr = HUOFPointsNumber;
-
-  //int Distances[HUOFPointsNumber][3];
-  int Distances[var][3];
-
+  int Distances[HUOFPointsNumber][3];
   int DistanceMax = 0;
   for (i = 0; i < HUOFPointsNumber; ++i)
   {
@@ -1149,11 +1101,7 @@ void MotionDetection::OpticalFlowCorrection()
 
     if (!(HUOFCamMovementY == 0 && HUOFCamMovementX >= -1 && HUOFCamMovementX <= 1))
     {
-      const int var1 = 1; int *ptr1; ptr1 = const_cast<int*>(&var1); *ptr1 = MaxX;
-      const int var2 = 1; int *ptr2; ptr2 = const_cast<int*>(&var2); *ptr2 = MaxY;
-
-      //MEPixelDataType* PreviousData[MaxX+1][MaxY+1];
-      MEPixelDataType* PreviousData[var1+1][var2+1];
+      MEPixelDataType* PreviousData[MaxX+1][MaxY+1];
 
       // Camera movement being happened
       for (int y = MaxY; y >= 0; --y)
@@ -1278,12 +1226,7 @@ void MotionDetection::GetMotionsMaskHU(MEImage& mask_image)
   int RowWidth = mask_image.GetRowWidth();
 
   // Generate a graph about the histogram data
-  const int var1 = 2; int *ptr1; ptr1 = const_cast<int*>(&var1); *ptr1 = HUImageWidth;
-  const int var2 = 1; int *ptr2; ptr2 = const_cast<int*>(&var2); *ptr2 = HUImageHeight;
-
-  //Graph::node_id Nodes[HUImageWidth / 2][HUImageHeight];
-  Graph::node_id Nodes[var1 / 2][var2];
-  
+  Graph::node_id Nodes[HUImageWidth / 2][HUImageHeight];
   Graph *LBPGraph = new Graph();
 
   for (int x = (HUImageWidth / 2)-1; x >= 0; --x)
@@ -1368,12 +1311,8 @@ void MotionDetection::SetSampleMaskHU(SampleMaskType mask_type, int desiredarea)
   // Generate a mask for computing the histograms
   IplImage *MaskImage = cvCreateImage(cvSize(HUHistogramArea, HUHistogramArea), 8, 1);
   int DesiredArea = desiredarea <= 0 ? HUHistogramBins*2 : desiredarea;
-
-  const int var1 = 5; int *ptr1; ptr1 = const_cast<int*>(&var1); *ptr1 = HUHistogramArea;
-  //int CalculationMask[HUHistogramArea][HUHistogramArea];
-  int CalculationMask[var1][var1];
-
-  int SquareSide = (int)MERound(std::sqrt((double)DesiredArea));
+  int CalculationMask[HUHistogramArea][HUHistogramArea];
+  int SquareSide = (int)MERound(sqrt(DesiredArea));
   int CircleRadius = (int)MERound(sqrt((float)DesiredArea / ME_PI_VALUE));
   int EllipseA = (int)MERound(HUHistogramArea / 2+1);
   int EllipseB = (int)MERound(DesiredArea / (EllipseA*1.2*ME_PI_VALUE));

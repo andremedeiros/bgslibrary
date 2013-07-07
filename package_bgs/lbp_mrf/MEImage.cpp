@@ -1286,7 +1286,7 @@ int MEImage::NeighbourhoodCounter(int startx, int starty,
 void MEImage::GradientVector(bool smooth, int x, int y, int mask_size, int& result_x, int& result_y)
 {
   int Results[8];
-  int DiagonalMaskSize = (int)((float)mask_size / std::sqrt((double)2));
+  int DiagonalMaskSize = (int)((float)mask_size / sqrt(2));
 
   if (ME_CAST_TO_IPLIMAGE(cvImg)->nChannels > 1)
   {

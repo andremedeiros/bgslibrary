@@ -29,7 +29,7 @@ Graph::Graph(void (*err_function)(char *))
 	flow = 0;
 }
 
-Graph::~Graph(void)
+Graph::~Graph()
 {
 	delete node_block;
 	delete arc_block;
