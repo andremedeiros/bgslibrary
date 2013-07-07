@@ -56,7 +56,7 @@ along with BGSLibrary.  If not, see <http://www.gnu.org/licenses/>.
 #include "package_bgs/lb/LBFuzzyAdaptiveSOM.h"
 
 #if !defined(_WIN32)
-#include "package_bgs/lbp_mrf/LbpMrf.h"
+#include "package_bgs/ck/LbpMrf.h"
 #endif
 
 #include "package_bgs/jmo/MultiLayerBGS.h"
