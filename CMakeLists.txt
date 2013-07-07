@@ -11,20 +11,36 @@ if(${OpenCV_VERSION} VERSION_LESS 2.3.1)
   message (FATAL_ERROR "OpenCV version is not compatible: ${OpenCV_VERSION}")
 endif()
 
-file(GLOB sources *.cpp)
+file(GLOB sources FrameProcessor.cpp PreProcessor.cpp VideoAnalysis.cpp  VideoCapture.cpp)
+file(GLOB main Main.cpp)
 file(GLOB demo Demo.cpp)
 
 list(REMOVE_ITEM sources ${demo})
 
 file(GLOB_RECURSE analysis package_analysis/*.cpp)
 file(GLOB_RECURSE bgs package_bgs/*.cpp)
+file(GLOB_RECURSE bgs_include package_bgs/*.h)
 
 include_directories(${CMAKE_SOURCE_DIR})
 
-add_executable(bgs ${sources} ${analysis} ${bgs})
-
+add_library(bgs SHARED ${sources} ${bgs} ${analysis})
 target_link_libraries(bgs ${OpenCV_LIBS})
+set_property(TARGET bgs PROPERTY PUBLIC_HEADER ${bgs_include})
 
-add_executable(demo ${demo} ${bgs})
+add_executable(bgs_bin ${main})
+target_link_libraries(bgs_bin ${OpenCV_LIBS} bgs)
+set_target_properties(bgs_bin
+  PROPERTIES OUTPUT_NAME bgs)
 
-target_link_libraries(demo ${OpenCV_LIBS})
+add_executable(bgs_demo ${demo})
+target_link_libraries(bgs_demo ${OpenCV_LIBS} bgs)
+
+INSTALL(TARGETS bgs
+	bgs_demo
+	bgs_bin
+  RUNTIME DESTINATION bin COMPONENT app
+  LIBRARY DESTINATION lib COMPONENT runtime
+  ARCHIVE DESTINATION lib COMPONENT runtime
+  PUBLIC_HEADER DESTINATION include/package_bgs COMPONENT dev
+  FRAMEWORK DESTINATION "/Library/Frameworks"
+)
