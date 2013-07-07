@@ -21,6 +21,12 @@ file(GLOB_RECURSE analysis package_analysis/*.cpp)
 file(GLOB_RECURSE bgs package_bgs/*.cpp)
 file(GLOB_RECURSE bgs_include package_bgs/*.h)
 
+# GMG is not available in older OpenCV versions
+if(${OpenCV_VERSION} VERSION_LESS 2.4.1)
+  file(GLOB gmg package_bgs/GMG.cpp)
+  list(REMOVE_ITEM bgs ${gmg})
+endif()
+
 include_directories(${CMAKE_SOURCE_DIR})
 
 add_library(bgs SHARED ${sources} ${bgs} ${analysis})

@@ -55,8 +55,10 @@ void FrameProcessor::init()
   if(enableAdaptiveBackgroundLearning)
     adaptiveBackgroundLearning = new AdaptiveBackgroundLearning;
 
+#if CV_MAJOR_VERSION == 2 && CV_MINOR_VERSION > 3
   if(enableGMG)
     gmg = new GMG;
+#endif
 
   if(enableDPAdaptiveMedianBGS)
     adaptiveMedian = new DPAdaptiveMedianBGS;
@@ -171,8 +173,10 @@ void FrameProcessor::process(const cv::Mat &img_input)
   if(enableAdaptiveBackgroundLearning)
     process("AdaptiveBackgroundLearning", adaptiveBackgroundLearning, img_prep, img_bkgl_fgmask);
 
+#if CV_MAJOR_VERSION == 2 && CV_MINOR_VERSION > 3
   if(enableGMG)
     process("GMG", gmg, img_prep, img_gmg);
+#endif
 
   if(enableDPAdaptiveMedianBGS)
     process("DPAdaptiveMedianBGS", adaptiveMedian, img_prep, img_adpmed);
@@ -259,7 +263,9 @@ void FrameProcessor::process(const cv::Mat &img_input)
     foregroundMaskAnalysis->process(frameNumber, "MixtureOfGaussianV1BGS", img_mog1);
     foregroundMaskAnalysis->process(frameNumber, "MixtureOfGaussianV2BGS", img_mog2);
     foregroundMaskAnalysis->process(frameNumber, "AdaptiveBackgroundLearning", img_bkgl_fgmask);
+#if CV_MAJOR_VERSION == 2 && CV_MINOR_VERSION > 3
     foregroundMaskAnalysis->process(frameNumber, "GMG", img_gmg);
+#endif
     foregroundMaskAnalysis->process(frameNumber, "DPAdaptiveMedianBGS", img_adpmed);
     foregroundMaskAnalysis->process(frameNumber, "DPGrimsonGMMBGS", img_grigmm);
     foregroundMaskAnalysis->process(frameNumber, "DPZivkovicAGMMBGS", img_zivgmm);
@@ -380,8 +386,10 @@ void FrameProcessor::finish(void)
   if(enableDPAdaptiveMedianBGS)
     delete adaptiveMedian;
 
+#if CV_MAJOR_VERSION == 2 && CV_MINOR_VERSION > 3
   if(enableGMG)
     delete gmg;
+#endif
 
   if(enableAdaptiveBackgroundLearning)
     delete adaptiveBackgroundLearning;
@@ -437,7 +445,9 @@ void FrameProcessor::saveConfig()
   cvWriteInt(fs, "enableMixtureOfGaussianV1BGS", enableMixtureOfGaussianV1BGS);
   cvWriteInt(fs, "enableMixtureOfGaussianV2BGS", enableMixtureOfGaussianV2BGS);
   cvWriteInt(fs, "enableAdaptiveBackgroundLearning", enableAdaptiveBackgroundLearning);
+#if CV_MAJOR_VERSION == 2 && CV_MINOR_VERSION > 3
   cvWriteInt(fs, "enableGMG", enableGMG);
+#endif
   
   cvWriteInt(fs, "enableDPAdaptiveMedianBGS", enableDPAdaptiveMedianBGS);
   cvWriteInt(fs, "enableDPGrimsonGMMBGS", enableDPGrimsonGMMBGS);
@@ -486,7 +496,9 @@ void FrameProcessor::loadConfig()
   enableMixtureOfGaussianV1BGS = cvReadIntByName(fs, 0, "enableMixtureOfGaussianV1BGS", false);
   enableMixtureOfGaussianV2BGS = cvReadIntByName(fs, 0, "enableMixtureOfGaussianV2BGS", false);
   enableAdaptiveBackgroundLearning = cvReadIntByName(fs, 0, "enableAdaptiveBackgroundLearning", false);
+#if CV_MAJOR_VERSION == 2 && CV_MINOR_VERSION > 3
   enableGMG = cvReadIntByName(fs, 0, "enableGMG", false);
+#endif
 
   enableDPAdaptiveMedianBGS = cvReadIntByName(fs, 0, "enableDPAdaptiveMedianBGS", false);
   enableDPGrimsonGMMBGS = cvReadIntByName(fs, 0, "enableDPGrimsonGMMBGS", false);

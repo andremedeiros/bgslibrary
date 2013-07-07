@@ -25,7 +25,9 @@ along with BGSLibrary.  If not, see <http://www.gnu.org/licenses/>.
 #include "package_bgs/MixtureOfGaussianV1BGS.h"
 #include "package_bgs/MixtureOfGaussianV2BGS.h"
 #include "package_bgs/AdaptiveBackgroundLearning.h"
+#if CV_MAJOR_VERSION == 2 && CV_MINOR_VERSION > 3
 #include "package_bgs/GMG.h"
+#endif
 
 #include "package_bgs/dp/DPAdaptiveMedianBGS.h"
 #include "package_bgs/dp/DPGrimsonGMMBGS.h"
