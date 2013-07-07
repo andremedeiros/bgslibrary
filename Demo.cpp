@@ -60,7 +60,10 @@ int main(int argc, char **argv)
   int resize_factor = 100;
 
   if(argc > 1)
+  {
+    std::cout << "Openning: " << argv[1] << std::endl;
     capture = cvCaptureFromAVI(argv[1]);
+  }
   else
   {
     capture = cvCaptureFromCAM(0);
