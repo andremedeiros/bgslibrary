@@ -155,7 +155,7 @@ int main(int argc, char **argv)
     //if(!img_mask.empty())
     //  do something
     
-    key = cvWaitKey(1);
+    key = cvWaitKey(33);
   }
 
   delete bgs;
