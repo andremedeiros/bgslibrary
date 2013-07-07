@@ -114,7 +114,7 @@ private:
   double *Pimage2;
   //
   void NPBGSubtraction_Subset_Kernel(unsigned char * image, unsigned char * FGImage, unsigned char * FilteredFGImage);
-  void NPBGSubtractor::SequenceBGUpdate_Pairs(unsigned char * image, unsigned char * Mask);
+  void SequenceBGUpdate_Pairs(unsigned char * image, unsigned char * Mask);
 
 public:
   NPBGSubtractor();
