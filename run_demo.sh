@@ -1,3 +1,3 @@
 #!/bin/bash
-./build/demo dataset/video.avi
+./build/bgs_demo dataset/video.avi
 
