@@ -52,6 +52,7 @@ along with BGSLibrary.  If not, see <http://www.gnu.org/licenses/>.
 #include "package_bgs/lb/LBFuzzyAdaptiveSOM.h"
 
 #if !defined(_WIN32)
+// Currently this method works only on Linux platform.
 #include "package_bgs/ck/LbpMrf.h"
 #endif
 
