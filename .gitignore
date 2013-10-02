@@ -1,0 +1,14 @@
+# CMake artifacts
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+
+# Build artifacts
+bgs
+bgs_demo
+*.so
+*.dylib
+
+# Misc.
+config/*.xml
